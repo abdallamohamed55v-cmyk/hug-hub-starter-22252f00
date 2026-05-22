@@ -779,6 +779,7 @@ serve(async (req) => {
           }
         }
         clearTimeout(killer);
+        clearInterval(heartbeat);
         console.log(`[bg-chat ${jobId}] stream completed, text_len=${assistantText.length}`);
         await flushMeta(true);
         await writer.setOutput({ text: assistantText, ...meta });
