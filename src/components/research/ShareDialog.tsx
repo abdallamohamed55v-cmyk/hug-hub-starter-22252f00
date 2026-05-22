@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Check, Copy, Mail, Link2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -42,11 +42,11 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
   const enc = encodeURIComponent;
 
   const channels = [
-    { name: "WhatsApp", Icon: Whatsapp, href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`, color: "bg-[#25D366] text-white shadow-[0_8px_20px_-8px_rgba(37,211,102,0.6)]" },
-    { name: "X", Icon: XIcon, href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, color: "bg-foreground text-background shadow-[0_8px_20px_-8px_hsl(var(--foreground)/0.6)]" },
-    { name: "Facebook", Icon: Facebook, href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, color: "bg-[#1877F2] text-white shadow-[0_8px_20px_-8px_rgba(24,119,242,0.6)]" },
-    { name: "Telegram", Icon: Telegram, href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`, color: "bg-[#229ED9] text-white shadow-[0_8px_20px_-8px_rgba(34,158,217,0.6)]" },
-    { name: "LinkedIn", Icon: LinkedIn, href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, color: "bg-[#0A66C2] text-white shadow-[0_8px_20px_-8px_rgba(10,102,194,0.6)]" },
+    { name: "WhatsApp", Icon: Whatsapp, href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`, color: "bg-[#25D366] text-white" },
+    { name: "X", Icon: XIcon, href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, color: "bg-foreground text-background" },
+    { name: "Facebook", Icon: Facebook, href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, color: "bg-[#1877F2] text-white" },
+    { name: "Telegram", Icon: Telegram, href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`, color: "bg-[#229ED9] text-white" },
+    { name: "LinkedIn", Icon: LinkedIn, href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, color: "bg-[#0A66C2] text-white" },
     { name: isRtl ? "البريد" : "Email", Icon: Mail, href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`, color: "bg-muted text-foreground border border-foreground/10" },
   ];
 
@@ -62,25 +62,30 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[460px] p-0 overflow-hidden border-foreground/10 bg-background/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl"
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="bottom"
         dir={isRtl ? "rtl" : "ltr"}
+        className="p-0 bg-background border-t border-foreground/10 rounded-t-3xl shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.3)] mx-auto sm:max-w-[520px] sm:left-1/2 sm:-translate-x-1/2 sm:rounded-t-3xl max-h-[92vh] overflow-y-auto data-[state=open]:duration-300"
       >
-        {/* Header with gradient accent */}
-        <div className="relative px-5 sm:px-7 pt-6 sm:pt-7 pb-4 sm:pb-5">
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
-          <div className="relative flex items-start gap-3">
+        {/* Grab handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="h-1.5 w-12 rounded-full bg-foreground/15" />
+        </div>
+
+        {/* Header */}
+        <div className="px-5 sm:px-7 pt-3 pb-4">
+          <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/20">
               <Share2 className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <DialogHeader>
-                <DialogTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight">
+              <SheetHeader>
+                <SheetTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight text-start">
                   {isRtl ? "مشاركة التقرير" : "Share report"}
-                </DialogTitle>
-              </DialogHeader>
-              <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed">
+                </SheetTitle>
+              </SheetHeader>
+              <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed text-start">
                 {title}
               </p>
             </div>
@@ -108,7 +113,7 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
         </div>
 
         {/* Copy link bar */}
-        <div className="border-t border-foreground/10 bg-muted/40 px-5 sm:px-7 py-4 sm:py-5">
+        <div className="border-t border-foreground/10 bg-muted/40 px-5 sm:px-7 py-4 sm:py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
           <label className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {isRtl ? "رابط المشاركة" : "Share link"}
           </label>
@@ -134,7 +139,7 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
             </button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
