@@ -82,12 +82,11 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
                   {isRtl ? "مشاركة التقرير" : "Share report"}
                 </SheetTitle>
               </SheetHeader>
-              <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed text-start">
-                {title}
-              </p>
-            </div>
-          </div>
+          <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed text-start">
+            {title}
+          </p>
         </div>
+
 
         {/* Channel grid */}
         <div className="px-4 sm:px-5 pb-4">
