@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
-  <defs></defs>
-  
-  <rect width="1280" height="720" fill="#050505"/>
-  <rect x="84" y="70" width="1112" height="580" fill="none" stroke="#c9a84c" stroke-width="2"/>
-  <rect x="112" y="98" width="1056" height="524" fill="none" stroke="#c9a84c" stroke-width="1" opacity=".45"/>
-  <line x1="640" y1="128" x2="640" y2="590" stroke="#c9a84c" opacity=".28"/>
-  <text x="640" y="316" text-anchor="middle" font-family="Georgia, serif" font-size="106" font-weight="500" fill="#f6e6b4">ATELIER</text>
-  <text x="640" y="392" text-anchor="middle" font-family="Georgia, serif" font-size="44" font-style="italic" fill="#c9a84c">Obsidian Editorial</text>
-  <text x="640" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="12" fill="#f0d78c">VOLUME 01</text>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  <rect x="60" y="50" width="680" height="400" fill="none" stroke="#c9a84c" stroke-width="1"/>
+  <text x="400" y="248" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#f0d78c" font-style="italic">Atelier</text>
+  <text x="400" y="290" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#c9a84c" letter-spacing="8">VOLUME 01</text>
 </svg>

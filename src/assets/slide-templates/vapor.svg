@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1e1b4b"/><stop offset=".55" stop-color="#7e22ce"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#g)"/>
+  <ellipse cx="400" cy="500" rx="500" ry="120" fill="#fef3c7" opacity=".25"/>
+  <g stroke="#f0abfc" opacity=".7" stroke-width="1.4">
+    <path d="M0 360h800M120 390h560M220 420h360"/>
+  </g>
+  <text x="400" y="240" text-anchor="middle" font-family="Space Grotesk,Arial,sans-serif" font-size="44" font-weight="700" fill="#fff" letter-spacing="6">VAPOR</text>
+</svg>

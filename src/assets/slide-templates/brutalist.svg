@@ -1,13 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
-  <defs></defs>
-  
-  <rect width="1280" height="720" fill="#f3efe4"/>
-  <rect x="0" y="0" width="1280" height="88" fill="#111"/>
-  <rect x="102" y="122" width="226" height="226" fill="#fde047" stroke="#111" stroke-width="6"/>
-  <rect x="940" y="430" width="236" height="180" fill="#111"/>
-  <text x="380" y="282" font-family="Arial Black, Arial, sans-serif" font-size="126" font-weight="900" fill="#111">BRUTAL</text>
-  <text x="102" y="502" font-family="Arial Black, Arial, sans-serif" font-size="96" font-weight="900" fill="#111">PRESS</text>
-  <text x="108" y="572" font-family="Courier New, monospace" font-size="31" font-weight="700" fill="#111">RAW TYPE / HARD LINES / NOISE</text>
-  <g stroke="#111" stroke-width="5"><path d="M380 330h475M380 366h365M380 402h430"/></g>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#f1ebde"/>
+  <rect x="80" y="80" width="120" height="120" fill="#fde047" stroke="#0a0a0a" stroke-width="3"/>
+  <text x="220" y="190" font-family="Archivo Black,Arial Black,sans-serif" font-size="76" font-weight="900" fill="#0a0a0a" letter-spacing="-2">PRESS</text>
+  <rect x="80" y="240" width="640" height="6" fill="#0a0a0a"/>
+  <text x="80" y="290" font-family="Space Mono,monospace" font-size="13" font-weight="700" fill="#0a0a0a" letter-spacing="3">RAW · TYPE · BRUTAL</text>
 </svg>

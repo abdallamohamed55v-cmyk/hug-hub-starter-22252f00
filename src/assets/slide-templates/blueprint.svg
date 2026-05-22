@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#0b2545"/>
+  <g stroke="#3b82f6" stroke-width="0.6" opacity=".5">
+    <path d="M0 50h800M0 100h800M0 150h800M0 200h800M0 250h800M0 300h800M0 350h800M0 400h800M0 450h800"/>
+    <path d="M50 0v500M100 0v500M150 0v500M200 0v500M250 0v500M300 0v500M350 0v500M400 0v500M450 0v500M500 0v500M550 0v500M600 0v500M650 0v500M700 0v500M750 0v500"/>
+  </g>
+  <g stroke="#bfdbfe" stroke-width="1.4" fill="none">
+    <rect x="200" y="150" width="400" height="200"/>
+    <path d="M200 250h400M400 150v200"/>
+  </g>
+  <text x="220" y="180" font-family="JetBrains Mono,monospace" font-size="11" fill="#bfdbfe">BLUEPRINT_01</text>
+</svg>

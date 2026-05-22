@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#020a05"/>
+  <g font-family="JetBrains Mono,monospace" font-size="13" fill="#22c55e" opacity=".85">
+    <text x="40" y="80">$ ./deck --build</text>
+    <text x="40" y="105" opacity=".55">› compiling slides ........ ok</text>
+    <text x="40" y="130" opacity=".55">› theme: terminal/green</text>
+    <text x="40" y="155" opacity=".55">› ready ▌</text>
+  </g>
+  <text x="400" y="290" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="36" font-weight="700" fill="#22c55e" letter-spacing="2">TERMINAL</text>
+</svg>
