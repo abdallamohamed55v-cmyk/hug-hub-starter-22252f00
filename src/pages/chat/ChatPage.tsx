@@ -21,7 +21,7 @@ import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 
 import { streamChat } from "@/lib/streamChat";
 import { addActiveChatJob, removeActiveChatJob, getActiveChatJobs } from "@/lib/jobs/chatResume";
-import { resumeJob as resumeBgJob } from "@/lib/jobs/client";
+import { resumeJob as resumeBgJob, failStaleJob } from "@/lib/jobs/client";
 import { getActiveWorkspaceId } from "@/lib/activeWorkspace";
 import { shouldUseWebSearch } from "@/lib/shouldUseWebSearch";
 import { parseUploadedFile } from "@/lib/parseUploadedFile";
@@ -860,6 +860,26 @@ const ChatPage = () => {
                   }
                 } else {
                   await persist();
+                }
+                removeActiveChatJob(entry.jobId);
+              },
+              onStale: async (row) => {
+                // Worker died mid-run. Mark job failed server-side so it won't appear active anymore,
+                // then either persist whatever partial text we have or remove the placeholder.
+                try { await failStaleJob(entry.jobId); } catch { /* ignore */ }
+                const partial = (row.stream_text || assistantText || "").trim();
+                if (partial) {
+                  assistantText = partial;
+                  await persist();
+                } else {
+                  setMessages((prev) => prev.map((m) =>
+                    ((entry.messageId && m.id === entry.messageId) || m.clientId === clientId)
+                      ? { ...m, content: "Deep Research stopped unexpectedly. You can run it again.", chatJobId: undefined }
+                      : m,
+                  ));
+                  if (entry.messageId) {
+                    try { await supabase.from("messages").delete().eq("id", entry.messageId); } catch {}
+                  }
                 }
                 removeActiveChatJob(entry.jobId);
               },

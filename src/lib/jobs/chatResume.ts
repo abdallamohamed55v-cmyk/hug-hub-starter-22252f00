@@ -15,7 +15,7 @@ export interface ActiveChatJob {
 }
 
 const KEY = "chat:activeJobs";
-const TTL_MS = 30 * 60 * 1000; // 30 min — jobs older than this are abandoned
+const TTL_MS = 24 * 60 * 60 * 1000; // 24h — keep local pointer long enough to resume deep research jobs
 
 function read(): ActiveChatJob[] {
   try {
