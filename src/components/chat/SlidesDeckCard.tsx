@@ -287,7 +287,7 @@ const SlidesDeckCard = ({ deck }: Props) => {
                     aria-label={`Slide ${i + 1}`}
                     className={`relative shrink-0 w-32 aspect-[16/9] rounded-md overflow-hidden transition ring-2 ${
                       i === idx
-                        ? "ring-white shadow-lg"
+                        ? "ring-white"
                         : "ring-transparent opacity-60 hover:opacity-100"
                     }`}
                   >
