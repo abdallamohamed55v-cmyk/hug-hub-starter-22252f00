@@ -672,11 +672,16 @@ serve(async (req) => {
       runInBackground(jobId, async (writer: JobWriter) => {
         await writer.start({ phase: "starting", status_text: "Starting…" });
         console.log(`[bg-chat ${jobId}] kicking inner fetch (deepResearch=${!!innerBody?.deepResearch})`);
+        // Periodic heartbeat so silent phases (e.g. deep-research planning,
+        // long search rounds) don't make the client think the job is stale.
+        const heartbeat = setInterval(() => {
+          writer.flushStream(true).catch(() => {});
+        }, 20_000);
         // Hard wall-clock so a stuck inner call surfaces as a job failure
         // instead of an indefinite "Searching…" spinner. Deep Research can
-        // legitimately take a couple of minutes, so allow up to 5 min.
+        // legitimately take several minutes, so allow up to 8 min.
         const ctl = new AbortController();
-        const HARD_TIMEOUT_MS = innerBody?.deepResearch ? 300_000 : 180_000;
+        const HARD_TIMEOUT_MS = innerBody?.deepResearch ? 480_000 : 180_000;
         const killer = setTimeout(() => {
           console.warn(`[bg-chat ${jobId}] hard timeout (${HARD_TIMEOUT_MS}ms) — aborting inner fetch`);
           ctl.abort();
@@ -691,12 +696,14 @@ serve(async (req) => {
           });
         } catch (e) {
           clearTimeout(killer);
+          clearInterval(heartbeat);
           console.error(`[bg-chat ${jobId}] inner fetch threw`, e);
           throw new Error(`inner fetch failed: ${e instanceof Error ? e.message : String(e)}`);
         }
         console.log(`[bg-chat ${jobId}] inner status=${resp.status} hasBody=${!!resp.body}`);
         if (!resp.ok || !resp.body) {
           clearTimeout(killer);
+          clearInterval(heartbeat);
           const errText = await resp.text().catch(() => "");
           throw new Error(errText || `HTTP ${resp.status}`);
         }
@@ -774,6 +781,7 @@ serve(async (req) => {
           }
         }
         clearTimeout(killer);
+        clearInterval(heartbeat);
         console.log(`[bg-chat ${jobId}] stream completed, text_len=${assistantText.length}`);
         await flushMeta(true);
         await writer.setOutput({ text: assistantText, ...meta });
