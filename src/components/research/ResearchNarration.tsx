@@ -136,7 +136,7 @@ function pickIconKind(text: string): IconKind {
 }
 
 const ResearchNarration = ({ items, active }: Props) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const visible = (items || []).filter((t) => (t || "").trim().length > 0 || active);
   if (visible.length === 0 && !active) return null;
 
