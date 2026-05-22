@@ -75,7 +75,7 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
 
         {/* Header */}
         <div className="px-5 sm:px-7 pt-3 pb-4">
-          <div className="min-w-0 flex-1">
+
 
               <SheetHeader>
                 <SheetTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight text-start">
