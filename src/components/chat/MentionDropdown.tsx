@@ -31,7 +31,7 @@ const MentionDropdown = ({ query, onSelect, onClose, visible, categories }: Ment
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 8 }}
-        className="absolute bottom-full mb-2 left-0 z-[46] w-72 rounded-2xl border border-border/30 bg-black/80 backdrop-blur-2xl p-2 shadow-[0_24px_80px_rgba(0,0,0,0.4)] max-h-[280px] overflow-y-auto"
+        className="absolute bottom-full mb-2 left-0 z-[46] w-72 rounded-2xl border border-border/30 bg-black/80 backdrop-blur-2xl p-2 max-h-[280px] overflow-y-auto"
       >
         <p className="text-[10px] text-muted-foreground/60 uppercase px-3 py-1.5 select-none">Agents</p>
         {filtered.map(agent => {
