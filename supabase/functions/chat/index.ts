@@ -3299,18 +3299,23 @@ async function handleToolCalls(
     // causing silent "تعذّر إنشاء التقرير" errors. We try several writers until one streams.
     const writerChain: { url: string; model: string; key: string }[] = [];
     if (isDeepResearch) {
-      // PRIMARY: Lovable AI Gateway with verified-allowed models (always funded).
+      // PRIMARY: DeepSeek V4 Flash via OpenRouter (user-requested).
+      const orK = getOpenRouterKey();
+      if (orK) {
+        writerChain.push({ url: OPENROUTER_URL, model: "deepseek/deepseek-v4-flash", key: orK });
+      }
+      // FALLBACK: Lovable AI Gateway.
       const lovKey = Deno.env.get("LOVABLE_API_KEY");
       if (lovKey) {
         writerChain.push({ url: LOVABLE_URL, model: "google/gemini-2.5-pro", key: lovKey });
         writerChain.push({ url: LOVABLE_URL, model: "google/gemini-2.5-flash", key: lovKey });
       }
-      // SECONDARY: OpenRouter (only if it has credits).
-      const orK = getOpenRouterKey();
+      // FALLBACK: OpenRouter other models.
       if (orK) {
         writerChain.push({ url: OPENROUTER_URL, model: "google/gemini-2.5-flash", key: orK });
         writerChain.push({ url: OPENROUTER_URL, model: "google/gemini-2.5-pro", key: orK });
       }
+
       // TERTIARY: whatever model the request asked for, normalized per provider.
       const _provider: "openrouter" | "lemondata" | "lovable" =
         apiUrl === LEMONDATA_URL ? "lemondata" : apiUrl === OPENROUTER_URL ? "openrouter" : "lovable";
