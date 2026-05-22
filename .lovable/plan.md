@@ -1,103 +1,156 @@
+# خطة اختبارات شاملة للموقع (Production-ready لـ 1M+ مستخدم)
 
-# تحسينات Deep Research
-
-5 تحسينات تتقسم لـ **3 طبقات**: قاعدة بيانات + Edge Function + واجهة.
-
----
-
-## 1. Research Plan قبل التنفيذ (Plan Gate)
-
-**الفكرة**: بدل ما الـ pipeline تجري كاملة من أول الرسالة، يعمل planning بس ويوقف يستنى موافقة المستخدم على الخطة والأسئلة الفرعية.
-
-**التغييرات**:
-- DB: إضافة status جديد `awaiting_approval` لـ `research_jobs`، وعمود `approved_at` (timestamptz).
-- Edge function: action جديد `approve` ياخد `jobId` و(اختيارياً) `plan` معدّلة، ويستأنف الـ pipeline.
-- بعد `planQueries()`، الـ pipeline تكتب الخطة وتقف عند `awaiting_approval` بدل ما تكمل searching مباشرة.
-- UI: كارت جديد `ResearchPlanCard` يظهر داخل المحادثة لما `status === "awaiting_approval"`:
-  - قائمة الأسئلة الفرعية قابلة للتعديل (add / edit / delete / reorder).
-  - زرار **Approve & Run** + **Cancel**.
+الهدف: تجهيز المنصة لاختبارات احترافية متعددة الطبقات تُغطّي الجودة، الأداء، الأمان، الوصولية، والتحمل، وتدعم الحصول على شهادات (WCAG, SOC2-readiness, OWASP).
 
 ---
 
-## 2. Live Activity Stream
+## 1. هرم الاختبارات (Testing Pyramid)
 
-**الفكرة**: بدل spinner، تيار خطوات حية بتظهر بالترتيب مع تأثير entrance.
+```
+        /\        E2E + Visual + Smoke (Playwright)
+       /  \       Integration (RTL + MSW)
+      /----\      Unit (Vitest)
+     /------\     Static (TS, ESLint, Type-coverage)
+```
 
-**التغييرات**:
-- الـ edge function بالفعل بتعمل `appendStep` — نحتاج بس نعرضها.
-- مكوّن جديد `ResearchActivityStream` (يستهلك `job.steps` من realtime):
-  - كل step بـ icon (plan / search / extract / synthesize / done) + نص + timestamp.
-  - الخطوة الحالية بـ pulse animation، اللي خلصت بـ ✓ خضراء.
-  - auto-scroll لآخر خطوة.
-- نضيف tracking أدق في الـ edge function: لما يبدأ extract لـ URL معيّن نعمل `appendStep({type:"reading", url, host})` قبل و`{type:"read", url, ms}` بعد.
-
----
-
-## 3. Progress Skeleton منظّم
-
-**الفكرة**: بدل progress bar مفرد، عرض خطوات الـ plan كـ checklist رأسية.
-
-**التغييرات**:
-- مكوّن `ResearchProgressChecklist`:
-  - مراحل ثابتة: `Planning → Searching → Reading sources → Synthesizing → Done`.
-  - كل مرحلة بـ status (pending / active / complete).
-  - تحت "Searching" يتفرّع لكل query من `job.plan` مع عداد نتايج.
-  - تحت "Reading sources" يعرض المواقع اللي اتقرت بـ favicon.
-- يحلّ محل الـ spinner الحالي في `ChatMessage` لما الـ job شغّال.
+| الطبقة | الأداة | النطاق |
+|---|---|---|
+| Static | TypeScript, ESLint, knip | Dead code, types |
+| Unit | Vitest + RTL | Components, hooks, utils |
+| Integration | Vitest + MSW | API flows, stores |
+| Contract | Deno Test | Edge Functions |
+| E2E | Playwright | Critical user journeys |
+| Visual | Playwright snapshots | UI regression |
+| A11y | axe-core + Pa11y | WCAG 2.1 AA |
+| Performance | Lighthouse CI | Core Web Vitals |
+| Load | k6 | 1M+ users simulation |
+| Security | npm audit + OWASP ZAP baseline + Semgrep | OWASP Top 10 |
 
 ---
 
-## 4. Export & Share (PDF / Markdown / Notion)
+## 2. ما سيتم إضافته
 
-**الفكرة**: قائمة export منسدلة من `DeepResearchCard` وصفحة preview.
+### A. تطوير Unit/Integration (Vitest)
+- إضافة `@testing-library/user-event`, `msw`, `@vitest/coverage-v8`
+- اختبارات لـ:
+  - `src/hooks/` (الـ hooks المهمة)
+  - `src/lib/` (utilities)
+  - `src/integrations/supabase/` (mock client)
+  - الصفحات الأساسية: auth, chat, workspace
+- coverage threshold: 70% lines / 60% branches
+- script: `bun test:unit`, `bun test:coverage`
 
-**التغييرات**:
-- **Markdown**: تنزيل مباشر من المتصفح (`Blob` + `download`). لا backend.
-- **PDF**: بالفعل موجود عبر `/research/preview` (html2canvas) — نوصّله لزرار جديد داخل dropdown.
-- **Notion**: نسخ نسخة Notion-friendly Markdown للـ clipboard مع تعليمات + زرار "Open Notion" يفتح `https://notion.new`. (Notion API الرسمي يحتاج OAuth — نأجّله ونوفّر "Copy for Notion" دلوقتي.)
-- **Public share link**: بالفعل شغّال (`share_token` في `research_reports`). نضيف زرار "Copy share link" منفصل عن زرار Share الـ native، ونضمن إن صفحة `/research/share/:token` تعرض الـ report للزوّار من غير auth.
-- مكوّن جديد `ExportMenu` (popover بسيط) يتربط في الكارت وصفحة الـ preview.
+### B. Edge Functions Tests (Deno)
+- ملف `index.test.ts` لكل دالة حرجة:
+  - `chat`, `chat-slides-stream`, `docs-generate`, `build-agent`, `generate-builder-schema`, `generate-code`
+- اختبار: CORS, auth header, rate-limit response, fallback model logic
+- script: `bun test:edge` (يستدعي `supabase functions serve` أو يستخدم deno test مباشرة)
+
+### C. E2E (Playwright)
+- `playwright.config.ts` (multi-browser: chromium, firefox, webkit + mobile viewports)
+- سيناريوهات حرجة في `e2e/`:
+  - `auth.spec.ts` — تسجيل/دخول/خروج
+  - `chat.spec.ts` — إرسال رسالة واستلام رد
+  - `slides.spec.ts` — توليد عرض تقديمي
+  - `docs.spec.ts` — توليد مستند
+  - `deep-research.spec.ts` — تشغيل بحث
+  - `workspace.spec.ts` — تنقل وإنشاء مشروع
+  - `billing.spec.ts` — صفحة الباقات
+- traces + screenshots on failure
+
+### D. Visual Regression
+- Playwright `toHaveScreenshot()` على الصفحات الرئيسية في 3 viewports (mobile/tablet/desktop)
+
+### E. Accessibility (WCAG 2.1 AA)
+- `@axe-core/playwright` يفحص كل صفحة في E2E
+- `pa11y-ci` كـ standalone scan + تقرير CI
+- script: `bun test:a11y`
+
+### F. Performance (Core Web Vitals)
+- `lighthouserc.cjs` مع budgets: LCP<2.5s, CLS<0.1, INP<200ms, TBT<300ms
+- يفحص: `/`, `/auth`, `/chat`, `/workspace`
+- script: `bun test:lighthouse`
+
+### G. Load Testing (1M+ users readiness)
+- مجلد `load-tests/` بسكربتات k6:
+  - `smoke.js` — 1 VU لدقيقة (sanity)
+  - `load.js` — 500 VUs / 10 min (نسخة عادية)
+  - `stress.js` — ramp-up حتى 5000 VUs (نقطة الانكسار)
+  - `spike.js` — قفزة من 100→10000 VU خلال 30s
+  - `soak.js` — 1000 VUs لمدة ساعة (ذاكرة/تسرّب)
+- يستهدف edge functions الأساسية + `/` و `/auth`
+- Thresholds: p95<500ms, error_rate<1%
+- توثيق scaling checklist (Supabase instance size, DB indexes, RLS perf)
+
+### H. Security
+- `bun audit` في CI
+- `semgrep --config=p/owasp-top-ten` (SAST)
+- OWASP ZAP baseline scan ضد preview URL (DAST)
+- Trivy لمسح الـ dockerfile/dependencies
+- Secret scanning بـ gitleaks
+- script: `bun test:security`
+
+### I. Smoke Tests (Production)
+- Playwright `@smoke` tagged tests تُشغّل بعد كل deploy على published URL
+
+### J. CI Workflow (GitHub Actions)
+- `.github/workflows/test.yml` بـ matrix:
+  1. `lint` + `typecheck`
+  2. `unit` + coverage upload
+  3. `e2e` (sharded)
+  4. `a11y`
+  5. `lighthouse`
+  6. `security` (audit + semgrep + zap baseline)
+- `load.yml` (manual dispatch) يشغّل k6 cloud
+
+### K. التقارير والشهادات (Certification Readiness)
+- `docs/testing/` يحتوي:
+  - `WCAG-compliance.md` — تقرير axe + Pa11y
+  - `OWASP-top10.md` — mapping للـ controls
+  - `performance-budget.md` — Core Web Vitals
+  - `load-test-results.md` — قدرة التحمل
+  - `test-strategy.md` — السياسة العامة
+- جاهز لتدقيق SOC2 type-I (سياسات + أدلة تشغيل CI).
 
 ---
 
-## 5. Collapsible Sections
+## 3. الأدوات المضافة (open-source بالكامل)
 
-**الفكرة**: في صفحة preview التقرير، كل H2 يبقى accordion. أول section ("Executive Summary" أو ما يعادله) يكون مفتوح افتراضياً.
-
-**التغييرات**:
-- داخل `ResearchArticleTemplate`، نستخدم `splitIntoSections` الموجود ونلفّ كل section في `<details>` مخصّص (أو `<button>` + `motion.div` لـ animation سلس).
-- أول section و"Sources" يفضلوا مفتوحين افتراضياً.
-- chevron يدوّر، expand-all / collapse-all في الـ header.
-
----
-
-## ترتيب التنفيذ
-
-1. **Migration** — إضافة `awaiting_approval` status + `approved_at` لـ `research_jobs`.
-2. **Edge function** — plan gate + steps أدق لـ Activity Stream.
-3. **Frontend job client** — حدث `runResearchJob` يدعم `onPlanReady` callback ويستأنف بعد approve.
-4. **مكوّنات جديدة** بالتوازي: `ResearchPlanCard`, `ResearchActivityStream`, `ResearchProgressChecklist`, `ExportMenu`.
-5. **تعديل** `ChatMessage` لعرض الـ plan card / activity / progress حسب `job.status`.
-6. **تعديل** `ResearchArticleTemplate` للأقسام القابلة للطيّ.
-7. **تعديل** `DeepResearchCard` + صفحة preview لربط `ExportMenu`.
+| الأداة | الغرض | الترخيص |
+|---|---|---|
+| Vitest, RTL, MSW, user-event | Unit/Integration | MIT |
+| Playwright | E2E + Visual | Apache 2.0 |
+| @axe-core/playwright, pa11y | A11y | MPL/MIT |
+| Lighthouse CI | Performance | Apache 2.0 |
+| k6 | Load | AGPL |
+| Semgrep, gitleaks, Trivy, OWASP ZAP | Security | LGPL/MIT/Apache |
+| knip | Dead code | ISC |
 
 ---
 
-## تفاصيل تقنية
+## 4. التنفيذ على مراحل (3 phases)
 
-| البند | الملف/الكيان |
-|---|---|
-| Status enum جديد | `research_jobs.status` (string field — لا يحتاج enum تعديل) |
-| Plan approval | `supabase/functions/deep-research-job/index.ts` |
-| Realtime sub | `src/lib/deepResearchJob.ts` (موجود) |
-| Plan UI | `src/components/research/ResearchPlanCard.tsx` (جديد) |
-| Activity | `src/components/research/ResearchActivityStream.tsx` (جديد) |
-| Progress | `src/components/research/ResearchProgressChecklist.tsx` (جديد) |
-| Export menu | `src/components/research/ExportMenu.tsx` (جديد) |
-| Collapsible | `src/components/research/ResearchArticleTemplate.tsx` (تعديل) |
-| Integration | `src/components/chat/ChatMessage.tsx`, `src/components/chat/DeepResearchCard.tsx`, `src/pages/chat/ChatPage.tsx` |
+**Phase 1 (هذا الـ commit):** البنية الأساسية
+- Playwright + 4 E2E سيناريوهات حرجة
+- Vitest coverage + MSW + 5 اختبارات لـ hooks/utils
+- axe في E2E
+- k6 smoke + load scripts
+- Lighthouse CI config
+- npm audit + semgrep config
+- GitHub Actions workflow
+- `docs/testing/test-strategy.md`
 
-ملاحظات:
-- صفحة `/research/share/:token` لازم تكون publicly readable — يتحقق إن `research_reports` فيها RLS policy `SELECT USING (share_token IS NOT NULL)` (لو مش موجودة هنضيفها في الـ migration).
-- مفيش تغيير على الـ AI provider أو الـ search provider.
-- مفيش OAuth جديد للـ Notion في الـ MVP.
+**Phase 2 (لاحقاً عند الطلب):** توسعة التغطية لكل صفحة، Visual snapshots كاملة، Edge function tests كاملة.
+
+**Phase 3:** تشغيل cloud load test فعلي + ZAP full scan + إعداد تقارير الشهادات.
+
+---
+
+## 5. ملاحظات تقنية
+
+- Playwright سيستخدم `webServer: vite preview --port 4173` محلياً، و `baseURL` عبر env في CI.
+- k6 يحتاج المستخدم يشغّله محلياً أو يربط حساب k6 Cloud — السكربتات جاهزة فقط.
+- ZAP و Semgrep يعملان كـ GitHub Actions (لا تثبيت محلي مطلوب).
+- لن نلمس أي كود تطبيق — كل التعديلات في ملفات اختبار وإعدادات وCI.
+
+هل أبدأ بـ Phase 1؟

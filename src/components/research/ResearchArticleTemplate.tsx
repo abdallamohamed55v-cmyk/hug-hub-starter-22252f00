@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 import { TemplateProps, splitIntoSections, hostname } from "./templateUtils";
 import SmartImage from "./SmartImage";
 
@@ -137,21 +137,6 @@ const ResearchArticleTemplate = ({
     [sections],
   );
   const [activeId, setActiveId] = useState<string>("");
-  // Collapsible state — first section open by default, rest collapsed.
-  const [openMap, setOpenMap] = useState<Record<string, boolean>>(() => {
-    const m: Record<string, boolean> = {};
-    sections.forEach((s, i) => {
-      m[`${i}-${slugify(s.heading)}`] = i === 0;
-    });
-    return m;
-  });
-  const toggleSection = (id: string) =>
-    setOpenMap((prev) => ({ ...prev, [id]: !prev[id] }));
-  const setAll = (open: boolean) => {
-    const m: Record<string, boolean> = {};
-    tocItems.forEach((t) => { m[t.id] = open; });
-    setOpenMap(m);
-  };
   useEffect(() => {
     if (tocItems.length === 0) return;
     const obs = new IntersectionObserver(
@@ -223,28 +208,9 @@ const ResearchArticleTemplate = ({
                   </section>
                 )}
 
-                {sections.length > 1 && (
-                  <div className="mt-10 sm:mt-16 flex items-center justify-end gap-1 text-[11.5px] font-medium text-muted-foreground">
-                    <button
-                      onClick={() => setAll(true)}
-                      className="px-2.5 py-1 rounded-md hover:bg-muted hover:text-foreground transition-colors"
-                    >
-                      {isRtl ? "فتح الكل" : "Expand all"}
-                    </button>
-                    <span className="opacity-40">·</span>
-                    <button
-                      onClick={() => setAll(false)}
-                      className="px-2.5 py-1 rounded-md hover:bg-muted hover:text-foreground transition-colors"
-                    >
-                      {isRtl ? "طيّ الكل" : "Collapse all"}
-                    </button>
-                  </div>
-                )}
-
                 {sections.map((s, i) => {
                   const id = `${i}-${slugify(s.heading)}`;
                   const img = inlineImages[i];
-                  const isOpen = openMap[id] !== false;
                   return (
                     <section
                       key={id}
@@ -253,55 +219,34 @@ const ResearchArticleTemplate = ({
                       dir={isRtl ? "rtl" : "ltr"}
                       className="scroll-mt-24"
                     >
-                      <button
-                        type="button"
-                        onClick={() => toggleSection(id)}
-                        aria-expanded={isOpen}
-                        className="group w-full text-start mt-8 mb-2 sm:mt-16 sm:mb-4"
-                      >
+                      <div className="mt-10 mb-4 sm:mt-20 sm:mb-6">
                         <div className="flex items-center gap-3">
                           <span className="font-mono text-xs font-medium tabular-nums text-primary">
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <span className="h-px flex-1 bg-border" />
-                          <ChevronDown
-                            className={`w-4 h-4 text-muted-foreground transition-transform ${isOpen ? "" : "-rotate-90"}`}
-                          />
                         </div>
                         <h2
                           dir="auto"
-                          className="mt-3 break-words font-display text-[22px] leading-[1.25] font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors sm:text-[40px] sm:leading-[1.15]"
+                          className="mt-3 break-words font-display text-[22px] leading-[1.25] font-semibold tracking-tight text-foreground sm:text-[40px] sm:leading-[1.15]"
                         >
                           {s.heading}
                         </h2>
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {isOpen && (
-                          <motion.div
-                            key="body"
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                            className="overflow-hidden"
-                          >
-                            <ReactMarkdown remarkPlugins={[remarkGfm]} components={md}>
-                              {s.body}
-                            </ReactMarkdown>
-                            {img && (
-                              <motion.figure
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-80px" }}
-                                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                                className="my-10 overflow-hidden"
-                              >
-                                <SmartImage src={img} loading="lazy" />
-                              </motion.figure>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      </div>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={md}>
+                        {s.body}
+                      </ReactMarkdown>
+                      {img && (
+                        <motion.figure
+                          initial={{ opacity: 0, y: 16 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-80px" }}
+                          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                          className="my-10 overflow-hidden"
+                        >
+                          <SmartImage src={img} loading="lazy" />
+                        </motion.figure>
+                      )}
                     </section>
                   );
                 })}

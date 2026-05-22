@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 export type ResearchJobStatus =
   | "queued"
   | "planning"
-  | "awaiting_approval"
   | "searching"
   | "synthesizing"
   | "succeeded"
@@ -47,8 +46,6 @@ export interface StartOptions {
   query: string;
   language?: string | null;
   conversationId?: string | null;
-  /** Skip the plan-approval gate and run the pipeline end-to-end. */
-  autoApprove?: boolean;
 }
 
 export async function startResearchJob(opts: StartOptions): Promise<string> {
@@ -58,7 +55,6 @@ export async function startResearchJob(opts: StartOptions): Promise<string> {
       query: opts.query,
       language: opts.language ?? null,
       conversationId: opts.conversationId ?? null,
-      autoApprove: opts.autoApprove === true,
     },
   });
   if (error) throw error;
@@ -71,18 +67,6 @@ export async function cancelResearchJob(jobId: string): Promise<void> {
   await supabase.functions.invoke("deep-research-job", {
     body: { action: "cancel", jobId },
   });
-}
-
-/**
- * Approve a paused research job (status === "awaiting_approval") and resume
- * execution. Optionally pass an edited plan (array of search queries) — the
- * server will sanitize it (trim, drop empties, cap at 12).
- */
-export async function approveResearchJob(jobId: string, plan?: string[]): Promise<void> {
-  const { error } = await supabase.functions.invoke("deep-research-job", {
-    body: { action: "approve", jobId, plan },
-  });
-  if (error) throw error;
 }
 
 export async function getResearchJob(jobId: string): Promise<ResearchJob | null> {
@@ -123,31 +107,17 @@ export function subscribeToResearchJob(
 /**
  * Convenience helper: starts a job and resolves with the final job when it
  * reaches a terminal state. Calls onProgress for every intermediate update.
- *
- * If `autoApprove` is false (default), the job pauses at `awaiting_approval`
- * and `onPlanReady` is fired with the plan + jobId. Caller is responsible for
- * calling `approveResearchJob(jobId, editedPlan)` to resume.
  */
 export async function runResearchJob(
-  opts: StartOptions & {
-    onProgress?: (job: ResearchJob) => void;
-    onPlanReady?: (job: ResearchJob) => void;
-    signal?: AbortSignal;
-  },
+  opts: StartOptions & { onProgress?: (job: ResearchJob) => void; signal?: AbortSignal },
 ): Promise<ResearchJob> {
   const jobId = await startResearchJob(opts);
 
   return new Promise<ResearchJob>((resolve, reject) => {
     let settled = false;
-    let planFired = false;
     const unsubscribe = subscribeToResearchJob(jobId, (job) => {
       opts.onProgress?.(job);
       if (settled) return;
-      if (!planFired && job.status === "awaiting_approval") {
-        planFired = true;
-        opts.onPlanReady?.(job);
-        return; // wait — do not settle
-      }
       if (job.status === "succeeded" || job.status === "failed" || job.status === "cancelled") {
         settled = true;
         unsubscribe();

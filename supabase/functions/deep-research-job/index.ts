@@ -202,8 +202,7 @@ async function synthesize(
 }
 
 // ---- Background pipeline ----
-// Phase 1: planning only. Stops at `awaiting_approval`.
-async function runPlanningPhase(jobId: string, query: string, language: string | null) {
+async function runPipeline(jobId: string, query: string, language: string | null) {
   const startedAt = Date.now();
   try {
     await patchJob(jobId, {
@@ -214,36 +213,10 @@ async function runPlanningPhase(jobId: string, query: string, language: string |
     });
 
     const plan = await planQueries(query, language);
+    await patchJob(jobId, { plan, progress: 15, stage: `Planned ${plan.length} queries` });
     await appendStep(jobId, { type: "plan", queries: plan });
-    await patchJob(jobId, {
-      plan,
-      progress: 12,
-      stage: "Awaiting approval",
-      status: "awaiting_approval",
-    });
-  } catch (e) {
-    const finishedAt = Date.now();
-    await patchJob(jobId, {
-      status: "failed",
-      stage: "Failed",
-      error: (e as Error)?.message || String(e),
-      finished_at: new Date(finishedAt).toISOString(),
-      duration_ms: finishedAt - startedAt,
-    });
-  }
-}
 
-// Phase 2: searching + extraction + synthesis. Runs after user approves the plan.
-async function runExecutionPhase(jobId: string, query: string, language: string | null, plan: string[]) {
-  const startedAt = Date.now();
-  try {
-    await patchJob(jobId, {
-      status: "searching",
-      progress: 18,
-      stage: "Searching the web",
-      plan,
-    });
-    await appendStep(jobId, { type: "approved", queries: plan });
+    await patchJob(jobId, { status: "searching", stage: "Searching the web" });
 
     const allSources: Source[] = [];
     const allImages: string[] = [];
@@ -251,7 +224,6 @@ async function runExecutionPhase(jobId: string, query: string, language: string 
 
     for (let i = 0; i < plan.length; i++) {
       const q = plan[i];
-      await appendStep(jobId, { type: "searching", query: q, index: i + 1, total: plan.length });
       const { organic, images } = await serperSearch(q);
       for (const s of organic) {
         if (s.url && !seen.has(s.url)) {
@@ -264,13 +236,13 @@ async function runExecutionPhase(jobId: string, query: string, language: string 
       await patchJob(jobId, {
         sources: allSources,
         images: allImages,
-        progress: 18 + Math.round(((i + 1) / plan.length) * 32),
-        stage: `Searched ${i + 1}/${plan.length}`,
+        progress: 15 + Math.round(((i + 1) / plan.length) * 35),
+        stage: `Searched ${i + 1}/${plan.length}: ${q.slice(0, 60)}`,
       });
       await appendStep(jobId, { type: "search", query: q, results: organic.length });
     }
 
-    // Extract top N pages in parallel batches with per-URL step tracking.
+    // Extract top N pages in parallel batches
     const TOP = Math.min(8, allSources.length);
     await patchJob(jobId, { stage: `Extracting ${TOP} pages` });
     const excerpts: { url: string; text: string }[] = [];
@@ -278,19 +250,8 @@ async function runExecutionPhase(jobId: string, query: string, language: string 
     const batchSize = 3;
     for (let i = 0; i < top.length; i += batchSize) {
       const batch = top.slice(i, i + batchSize);
-      // Announce reads
-      for (const s of batch) {
-        const host = (() => { try { return new URL(s.url).hostname.replace(/^www\./, ""); } catch { return s.url; } })();
-        await appendStep(jobId, { type: "reading", url: s.url, host, title: s.title });
-      }
       const results = await Promise.all(
-        batch.map(async (s) => {
-          const t0 = Date.now();
-          const text = await extractPage(s.url);
-          const host = (() => { try { return new URL(s.url).hostname.replace(/^www\./, ""); } catch { return s.url; } })();
-          await appendStep(jobId, { type: "read", url: s.url, host, ms: Date.now() - t0, chars: text.length });
-          return { url: s.url, text };
-        }),
+        batch.map(async (s) => ({ url: s.url, text: await extractPage(s.url) })),
       );
       excerpts.push(...results);
       await patchJob(jobId, {
@@ -305,7 +266,6 @@ async function runExecutionPhase(jobId: string, query: string, language: string 
     });
 
     await patchJob(jobId, { status: "synthesizing", progress: 85, stage: "Synthesizing report" });
-    await appendStep(jobId, { type: "synthesizing" });
 
     const report = await synthesize(query, language, allSources, excerpts);
 
@@ -330,7 +290,6 @@ async function runExecutionPhase(jobId: string, query: string, language: string 
     });
   }
 }
-
 
 // ---- HTTP entry ----
 Deno.serve(async (req) => {
@@ -373,50 +332,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (action === "approve" && body?.jobId) {
-      // Load the job, validate ownership + status, then resume execution phase.
-      const { data: job } = await admin
-        .from("research_jobs")
-        .select("id, user_id, query, language, plan, status")
-        .eq("id", body.jobId)
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (!job) {
-        return new Response(JSON.stringify({ error: "job_not_found" }), {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if ((job as any).status !== "awaiting_approval" && (job as any).status !== "planning") {
-        return new Response(JSON.stringify({ error: "invalid_status", status: (job as any).status }), {
-          status: 409,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      // Allow user-edited plan: array of 1-12 non-empty strings.
-      let plan: string[] = Array.isArray((job as any).plan) ? (job as any).plan : [];
-      if (Array.isArray(body?.plan)) {
-        const cleaned = body.plan
-          .map((s: unknown) => (typeof s === "string" ? s.trim() : ""))
-          .filter((s: string) => s.length > 2)
-          .slice(0, 12);
-        if (cleaned.length) plan = cleaned;
-      }
-      await admin
-        .from("research_jobs")
-        .update({ approved_at: new Date().toISOString(), plan })
-        .eq("id", body.jobId);
-
-      try {
-        EdgeRuntime.waitUntil(runExecutionPhase(body.jobId, (job as any).query, (job as any).language, plan));
-      } catch {
-        runExecutionPhase(body.jobId, (job as any).query, (job as any).language, plan);
-      }
-      return new Response(JSON.stringify({ success: true, jobId: body.jobId }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     // start
     const query: string = (body?.query || "").toString().trim();
     if (!query) {
@@ -427,8 +342,6 @@ Deno.serve(async (req) => {
     }
     const language: string | null = body?.language || null;
     const conversationId: string | null = body?.conversationId || null;
-    // Optional: skip the plan-approval gate (auto-run end-to-end).
-    const autoApprove: boolean = body?.autoApprove === true;
 
     const { data: inserted, error: insErr } = await admin
       .from("research_jobs")
@@ -451,30 +364,13 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Fire-and-forget background pipeline (planning phase only — stops at awaiting_approval).
-    const startPlanThenMaybeRun = async () => {
-      await runPlanningPhase(inserted.id, query, language);
-      if (autoApprove) {
-        // Fetch the plan we just produced and run execution.
-        const { data: row } = await admin
-          .from("research_jobs")
-          .select("plan")
-          .eq("id", inserted.id)
-          .maybeSingle();
-        const plan = Array.isArray((row as any)?.plan) ? (row as any).plan : [query];
-        await admin
-          .from("research_jobs")
-          .update({ approved_at: new Date().toISOString() })
-          .eq("id", inserted.id);
-        await runExecutionPhase(inserted.id, query, language, plan);
-      }
-    };
+    // Fire-and-forget background pipeline
     try {
-      EdgeRuntime.waitUntil(startPlanThenMaybeRun());
+      EdgeRuntime.waitUntil(runPipeline(inserted.id, query, language));
     } catch {
-      startPlanThenMaybeRun();
+      // Fallback (local dev): run without waitUntil
+      runPipeline(inserted.id, query, language);
     }
-
 
     return new Response(JSON.stringify({ jobId: inserted.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
