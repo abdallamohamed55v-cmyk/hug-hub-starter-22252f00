@@ -1,0 +1,1 @@
+ALTER TABLE public.research_jobs ADD COLUMN IF NOT EXISTS approved_at timestamptz;
