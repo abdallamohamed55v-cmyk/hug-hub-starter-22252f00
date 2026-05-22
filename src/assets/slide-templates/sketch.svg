@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs></defs>
+  
+  <rect width="1280" height="720" fill="#f7f0df"/>
+  <path d="M80 90 C260 72,380 118,520 92 S820 58,1010 96 S1210 70,1238 108" fill="none" stroke="#1f1b16" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+  <path d="M118 612 C290 658,472 584,622 626 S950 660,1162 586" fill="none" stroke="#1f1b16" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+  <rect x="150" y="122" width="430" height="455" rx="18" fill="#fffaf0" stroke="#1f1b16" stroke-width="4" transform="rotate(-2 365 350)"/>
+  <g stroke="#1f1b16" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M220 228h270M220 286h220M220 344h300M220 402h170"/>
+    <path d="M736 180c70 16 136 74 152 148M902 332l-42-16M902 332l-22-42"/>
+    <circle cx="870" cy="470" r="78"/><path d="M812 518l116-102M824 410l98 116"/>
+    <path d="M702 564c70-86 176-100 276-58 44 19 78 22 126-4" stroke-dasharray="12 14"/>
+  </g>
+  <text x="650" y="326" font-family="Comic Sans MS, Patrick Hand, cursive" font-size="104" font-weight="900" fill="#1f1b16" transform="rotate(-4 650 326)">SKETCH</text>
+  <text x="674" y="392" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#7c5d35">INK · PAPER · DOODLES</text>
+
+</svg>
