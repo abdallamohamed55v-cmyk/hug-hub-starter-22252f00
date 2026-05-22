@@ -80,7 +80,7 @@ const ChatDesktopDialog = ({
       <div
         role="dialog"
         aria-modal="true"
-        className={`fixed left-1/2 top-1/2 z-[1001] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-border/30 bg-background text-foreground shadow-2xl ${className}`}
+        className={`fixed left-1/2 top-1/2 z-[1001] w-[calc(100vw-2rem)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-border/30 bg-background text-foreground ${className}`}
         onClick={(event) => event.stopPropagation()}
       >
         {children}
@@ -3158,7 +3158,7 @@ Ask me anything to get started!`;
             maxHeight: { type: "spring", stiffness: 220, damping: 28, mass: 0.7 },
           }}
           data-plus-menu
-          className="fixed inset-x-0 bottom-0 z-[56] w-full rounded-t-[28px] overflow-hidden bg-background border-t border-border/40 shadow-[0_-8px_40px_-12px_rgba(0,0,0,0.18)] flex flex-col md:hidden"
+          className="fixed inset-x-0 bottom-0 z-[56] w-full rounded-t-[28px] overflow-hidden bg-background border-t border-border/40 flex flex-col md:hidden"
         >
           <motion.div
             drag="y"
@@ -3203,7 +3203,7 @@ Ask me anything to get started!`;
           data-plus-menu
           onClick={(e) => e.stopPropagation()}
           style={{ maxHeight: "min(70vh, 560px)" }}
-          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[360px] rounded-2xl border border-border bg-background shadow-[0_22px_55px_-16px_rgba(0,0,0,0.55)] overflow-y-auto overscroll-contain p-2 flex-col`}
+          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[360px] rounded-2xl border border-border bg-background overflow-y-auto overscroll-contain p-2 flex-col`}
         >
           {content}
         </motion.div>
@@ -3300,7 +3300,7 @@ Ask me anything to get started!`;
                 <DropdownMenuContent
                   align="start"
                   sideOffset={6}
-                  className="w-[15rem] rounded-2xl liquid-glass border border-border/30 p-1.5 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.45)]"
+                  className="w-[15rem] rounded-2xl liquid-glass border border-border/30 p-1.5"
                 >
                   {[
                     { icon: Plus, label: "New chat", onClick: handleNewChat, featured: true },
@@ -3351,7 +3351,7 @@ Ask me anything to get started!`;
               <DropdownMenuContent
                 align="end"
                 sideOffset={8}
-                className="w-[15rem] rounded-2xl liquid-glass border border-border/30 p-1.5 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.45)]"
+                className="w-[15rem] rounded-2xl liquid-glass border border-border/30 p-1.5"
               >
                 {[
                   { icon: Plus, label: "New chat", onClick: handleNewChat, featured: true },
@@ -3777,7 +3777,7 @@ Ask me anything to get started!`;
                 exit={{ opacity: 0, y: 8, scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 320, damping: 24 }}
                 onClick={scrollToBottom}
-                className={`fixed bottom-40 left-1/2 -translate-x-1/2 z-20 ${newMessagesCount > 0 ? "px-3 h-8 gap-1.5 bg-primary text-primary-foreground" : "w-8 h-8 liquid-glass text-foreground/70 hover:text-foreground"} rounded-full flex items-center justify-center transition-colors shadow-lg`}
+                className={`fixed bottom-40 left-1/2 -translate-x-1/2 z-20 ${newMessagesCount > 0 ? "px-3 h-8 gap-1.5 bg-primary text-primary-foreground" : "w-8 h-8 liquid-glass text-foreground/70 hover:text-foreground"} rounded-full flex items-center justify-center transition-colors`}
                 aria-label="Scroll to bottom"
               >
                 <ArrowDown className="w-3.5 h-3.5" />
@@ -3869,7 +3869,7 @@ Ask me anything to get started!`;
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
-                    className="absolute bottom-full left-0 right-0 mb-2 mx-3 rounded-xl border border-border bg-popover shadow-lg overflow-hidden z-30"
+                    className="absolute bottom-full left-0 right-0 mb-2 mx-3 rounded-xl border border-border bg-popover overflow-hidden z-30"
                   >
                     {members
                       .filter((m) => (m.name || "").toLowerCase().includes(mentionQuery.q.toLowerCase()))

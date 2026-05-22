@@ -245,7 +245,7 @@ const AnimatedInput = ({ value, onChange, onSend, onCancel, onPlusClick, disable
 
       {/* Desktop: gradient border ring wrapper (matches Media Hub card) */}
       <div className="md:rounded-[26px] md:p-[1px] md:bg-gradient-to-b md:from-foreground/[0.12] md:to-foreground/[0.04]">
-      <div className="chat-composer-frame pointer-events-auto rounded-[1.35rem] px-4 pt-1 pb-2 relative z-10 bg-background shadow-xl md:shadow-none md:bg-card md:rounded-[25px] md:px-3.5 md:pt-3.5 md:pb-3 md:border md:border-foreground/[0.02]">
+      <div className="chat-composer-frame pointer-events-auto rounded-[1.35rem] px-4 pt-1 pb-2 relative z-10 bg-background md:bg-card md:rounded-[25px] md:px-3.5 md:pt-3.5 md:pb-3 md:border md:border-foreground/[0.02]">
         <AnimatePresence>
           {hasQuestions && currentQuestion && (
             <motion.div

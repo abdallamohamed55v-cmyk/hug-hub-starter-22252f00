@@ -162,7 +162,7 @@ const BottomInputBar = ({
 
   const menuClass =
     "w-40 p-1.5 rounded-xl border border-border " +
-    "bg-popover backdrop-blur-3xl shadow-lg";
+    "bg-popover backdrop-blur-3xl";
 
   const itemBase = "w-full text-left text-xs px-3 py-2 rounded-lg transition-colors text-popover-foreground";
 
@@ -181,7 +181,7 @@ const BottomInputBar = ({
         />
 
         {/* Main glass container */}
-        <div className="bg-muted/80 backdrop-blur-3xl border border-border rounded-2xl shadow-lg overflow-visible">
+        <div className="bg-muted/80 backdrop-blur-3xl border border-border rounded-2xl overflow-visible">
           {/* Input area with media buttons */}
           <div className="flex items-start gap-3 px-5 pt-4 pb-3">
             {/* Image attach button */}
