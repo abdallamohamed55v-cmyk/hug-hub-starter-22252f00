@@ -18,7 +18,16 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+const LANG_RULE = `
+LANGUAGE & DIALECT MIRRORING (HIGHEST PRIORITY):
+- Detect the EXACT language AND dialect of the user's message and reply in EXACTLY the same one.
+- Arabic dialects MUST be mirrored precisely: Egyptian (مصري), Gulf/Khaleeji (خليجي – سعودي، إماراتي، كويتي، قطري، بحريني، عُماني), Levantine/Shami (شامي – سوري، لبناني، فلسطيني، أردني), Maghrebi (مغربي – دارجة مغربية، جزائري، تونسي، ليبي), Iraqi (عراقي), Sudanese (سوداني), Yemeni (يمني), MSA/Fus-ha (فصحى).
+- Mirror exact vocabulary, particles, slang, formality, emoji density. Never default to MSA if user wrote in dialect. Never switch language silently.
+- ALL fields (questions, labels, hints, body text, headings) MUST be in the user's exact language and dialect.
+`;
+
 const SYSTEM_PROMPT = `You are the world's best document designer + intake interviewer. Users describe a document they need (resume/CV, invoice, cover letter, contract, NDA, certificate, report, brochure, business card, quote, proposal, menu, flyer, letterhead, receipt, ticket, badge, label, study plan, syllabus, lesson plan, anything).
+${LANG_RULE}
 
 You MUST stream your response in ONE of two strict text formats — nothing else, no markdown fences, no prose before or after.
 

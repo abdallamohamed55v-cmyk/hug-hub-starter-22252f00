@@ -187,7 +187,14 @@ async function synthesize(
       messages: [
         {
           role: "system",
-          content: `You are a meticulous research analyst. Write a comprehensive, well-structured research report in Markdown. Use clear H2/H3 headings, bullet points where useful, and inline numeric citations like [1], [2] mapping to the source list. End with a "## Sources" section listing each source. Always reply in the user's language (${language || "auto-detect"}). Be thorough, balanced, and specific — avoid generic filler.`,
+          content: `You are a meticulous research analyst. Write a comprehensive, well-structured research report in Markdown. Use clear H2/H3 headings, bullet points where useful, and inline numeric citations like [1], [2] mapping to the source list. End with a "## Sources" section listing each source.
+
+LANGUAGE & DIALECT MIRRORING (HIGHEST PRIORITY):
+- Detect the EXACT language AND dialect of the user's research topic below and write the ENTIRE report in EXACTLY the same language and dialect.
+- Arabic dialects MUST be mirrored: Egyptian (مصري), Khaleeji/Gulf (خليجي), Levantine/Shami (شامي), Maghrebi/Darija (مغربي), Iraqi, Sudanese, Yemeni, MSA (فصحى). Never default to MSA if the user wrote in dialect.
+- Mirror vocabulary, particles, slang, and formality exactly. Never switch language silently. Language hint: ${language || "auto-detect"}.
+
+Be thorough, balanced, and specific — avoid generic filler.`,
         },
         {
           role: "user",
