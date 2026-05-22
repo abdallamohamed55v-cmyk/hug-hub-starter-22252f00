@@ -952,6 +952,46 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
                 </div>
               );
             }
+            // Deep Research live/in-progress text (when the final card isn't ready yet)
+            // → wrap inside a collapsible "Research draft" box so it doesn't spill into chat.
+            const showResearchDraftBox =
+              role === "assistant" &&
+              !!isDeepResearch &&
+              !showResearchCard &&
+              displayContent.trim().length > 0;
+            if (showResearchDraftBox) {
+              const isAr = al === "ar";
+              return (
+                <div className="rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl overflow-hidden" dir={langDir(al)}>
+                  <button
+                    type="button"
+                    onClick={() => setResearchDraftOpen((v) => !v)}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium text-foreground/90 hover:bg-foreground/5 transition"
+                  >
+                    <span className="flex-1 text-start inline-flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                      {isAr ? "مسوّدة البحث" : "Research draft"}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${researchDraftOpen ? "" : "-rotate-90"}`} />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {researchDraftOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="border-t border-border/40 px-4 py-3 max-h-[50vh] overflow-y-auto">
+                          {inner}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
             return inner;
           })()}
 
