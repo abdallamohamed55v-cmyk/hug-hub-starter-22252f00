@@ -66,7 +66,7 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
       <SheetContent
         side="bottom"
         dir={isRtl ? "rtl" : "ltr"}
-        className="!left-1/2 !right-auto w-[calc(100%-1rem)] max-w-[520px] !-translate-x-1/2 p-0 bg-background border border-foreground/10 rounded-t-3xl shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.3)] max-h-[92vh] overflow-y-auto data-[state=open]:duration-300"
+        className="!left-1/2 !right-auto w-[calc(100%-1rem)] max-w-[520px] !-translate-x-1/2 p-0 bg-background border border-foreground/10 rounded-t-3xl shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.3)] max-h-[92vh] overflow-y-auto data-[state=open]:duration-300 sm:!top-1/2 sm:!bottom-auto sm:!-translate-y-1/2 sm:rounded-3xl sm:shadow-2xl sm:data-[state=open]:slide-in-from-bottom-0 sm:data-[state=closed]:slide-out-to-bottom-0"
       >
         {/* Grab handle */}
         <div className="flex justify-center pt-3 pb-1">
