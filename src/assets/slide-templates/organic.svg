@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#efe9dd"/>
+  <path d="M180 250 C180 140,320 110,420 160 S620 280,560 360 320 410 220 350 180 320 180 250 Z" fill="#7d9b76" opacity=".9"/>
+  <circle cx="540" cy="180" r="40" fill="#c2956b"/>
+  <text x="400" y="450" text-anchor="middle" font-family="Lora,Georgia,serif" font-size="14" fill="#3a3528" letter-spacing="5">ORGANIC · CLAY</text>
+</svg>

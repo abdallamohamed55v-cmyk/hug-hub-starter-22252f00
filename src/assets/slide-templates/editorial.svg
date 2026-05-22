@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#f3eee5"/>
+  <line x1="60" y1="80" x2="60" y2="420" stroke="#1a1714" stroke-width="1"/>
+  <line x1="740" y1="80" x2="740" y2="420" stroke="#1a1714" stroke-width="1"/>
+  <text x="400" y="240" text-anchor="middle" font-family="Cormorant Garamond,Playfair Display,serif" font-size="62" font-style="italic" fill="#1a1714">Editorial</text>
+  <text x="400" y="280" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8a7355" letter-spacing="6">SERIF · QUIET · SLOW</text>
+</svg>

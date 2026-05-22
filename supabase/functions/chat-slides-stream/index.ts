@@ -35,6 +35,8 @@ const REACT_TEMPLATES = new Set([
   "premium-megsy", "premium-glass-pitch", "premium-cinema-3d",
   "premium-ios", "premium-sketch", "premium-3d", "premium-neon",
   "premium-brutalist", "premium-cinematic",
+  "premium-mono", "premium-pastel", "premium-editorial", "premium-terminal",
+  "premium-vapor", "premium-blueprint", "premium-organic",
 ]);
 
 // Standard template IDs → premium HTML shell. Picked by visual affinity so the
@@ -82,6 +84,13 @@ const PALETTES: Record<string, { primary: string; accent: string; bg: string; fg
   "premium-neon":            { primary: "#22d3ee", accent: "#ec4899", bg: "#050816", fg: "#f0f9ff" },
   "premium-brutalist":       { primary: "#0d0d0d", accent: "#fde047", bg: "#f5f3ee", fg: "#0d0d0d" },
   "premium-cinematic":       { primary: "#5cbdb9", accent: "#99f6e4", bg: "#001f3f", fg: "#e8f0f8" },
+  "premium-mono":            { primary: "#e5e5e5", accent: "#a3a3a3", bg: "#0a0a0a", fg: "#fafafa" },
+  "premium-pastel":          { primary: "#f8c8d8", accent: "#c9e4ca", bg: "#fbf3f0", fg: "#5b4a52" },
+  "premium-editorial":       { primary: "#1a1714", accent: "#8a7355", bg: "#f3eee5", fg: "#1a1714" },
+  "premium-terminal":        { primary: "#22c55e", accent: "#86efac", bg: "#020a05", fg: "#dcfce7" },
+  "premium-vapor":           { primary: "#ec4899", accent: "#f0abfc", bg: "#1e1b4b", fg: "#fef3c7" },
+  "premium-blueprint":       { primary: "#bfdbfe", accent: "#3b82f6", bg: "#0b2545", fg: "#eff6ff" },
+  "premium-organic":         { primary: "#7d9b76", accent: "#c2956b", bg: "#efe9dd", fg: "#3a3528" },
 };
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");

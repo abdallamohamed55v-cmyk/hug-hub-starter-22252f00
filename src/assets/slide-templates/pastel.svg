@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><defs></defs>
+  <rect width="800" height="500" fill="#fbf3f0"/>
+  <circle cx="240" cy="250" r="130" fill="#f8c8d8" opacity=".85"/>
+  <circle cx="420" cy="250" r="130" fill="#c9e4ca" opacity=".75"/>
+  <circle cx="600" cy="250" r="130" fill="#cdd6f5" opacity=".75"/>
+  <text x="400" y="450" text-anchor="middle" font-family="Plus Jakarta Sans,Inter,sans-serif" font-size="14" fill="#5b4a52" letter-spacing="6">PASTEL · SOFT</text>
+</svg>
