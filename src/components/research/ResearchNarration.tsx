@@ -157,10 +157,15 @@ const ResearchNarration = ({ items, active }: Props) => {
   const lastIdx = items.length - 1;
   // When collapsed (and we have more than 1 item) show only the last item.
   const showAll = expanded || items.length <= 1;
-  const displayedItems = showAll
-    ? items.map((text, i) => ({ text, originalIndex: i }))
-    : [{ text: items[lastIdx], originalIndex: lastIdx }];
   const hiddenCount = items.length - 1;
+
+  // First item carries the icon; the rest are joined inline with separators.
+  const firstItem = showAll ? items[0] : items[lastIdx];
+  const restItems = showAll ? items.slice(1).filter((t) => (t || "").trim().length > 0) : [];
+  const firstKind = pickIconKind(firstItem || "");
+  const firstIsEmpty = !firstItem || firstItem.trim().length === 0;
+  const firstIsActive = (showAll ? 0 === lastIdx : true) && active;
+  const lastIsActive = active;
 
   return (
     <div dir={dir} className="mb-3">
@@ -176,42 +181,29 @@ const ResearchNarration = ({ items, active }: Props) => {
         </button>
       )}
 
-      <div className="space-y-2.5">
-        <AnimatePresence initial={false}>
-          {displayedItems.map(({ text, originalIndex }) => {
-            const isLast = originalIndex === lastIdx;
-            const isEmpty = !text || text.trim().length === 0;
-            const kind = pickIconKind(text);
-            const isActiveStep = isLast && active;
-            return (
-              <motion.div
-                key={originalIndex}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.25 }}
-                className="flex items-start gap-2.5"
-              >
-                <span className="mt-0.5 inline-flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-secondary/50 border border-border/40">
-                  {isActiveStep && isEmpty ? (
-                    <CustomIcon kind="loader" className="w-3.5 h-3.5 text-primary" />
-                  ) : (
-                    <CustomIcon
-                      kind={kind}
-                      className={`w-3.5 h-3.5 ${isActiveStep ? "text-primary" : "text-muted-foreground"}`}
-                    />
-                  )}
-                </span>
-                <p className="text-[14px] leading-relaxed text-foreground/90 flex-1 break-words pt-0.5">
-                  {text}
-                  {isActiveStep && !isEmpty && (
-                    <span className="inline-block w-[2px] h-[14px] bg-primary/70 align-middle ms-0.5 animate-pulse" />
-                  )}
-                </p>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+      <div className="flex items-start gap-2.5">
+        <span className="mt-0.5 inline-flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-secondary/50 border border-border/40">
+          {firstIsActive && firstIsEmpty ? (
+            <CustomIcon kind="loader" className="w-3.5 h-3.5 text-primary" />
+          ) : (
+            <CustomIcon
+              kind={firstKind}
+              className={`w-3.5 h-3.5 ${firstIsActive ? "text-primary" : "text-muted-foreground"}`}
+            />
+          )}
+        </span>
+        <p className="text-[14px] leading-relaxed text-foreground/90 flex-1 break-words pt-0.5">
+          <span>{firstItem}</span>
+          {restItems.map((t, i) => (
+            <span key={i}>
+              <span className="mx-1.5 text-muted-foreground/60">•</span>
+              <span className={i === restItems.length - 1 && lastIsActive ? "text-foreground" : ""}>{t}</span>
+            </span>
+          ))}
+          {lastIsActive && (
+            <span className="inline-block w-[2px] h-[14px] bg-primary/70 align-middle ms-0.5 animate-pulse" />
+          )}
+        </p>
       </div>
 
       {/* Collapse button when expanded */}
@@ -227,5 +219,6 @@ const ResearchNarration = ({ items, active }: Props) => {
     </div>
   );
 };
+
 
 export default ResearchNarration;
