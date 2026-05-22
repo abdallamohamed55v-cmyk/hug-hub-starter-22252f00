@@ -322,7 +322,7 @@ const AppSidebar = ({
               Object.entries(groups).map(([label, items]) =>
                 items.length === 0 ? null : (
                   <div key={label} className="mb-3">
-                    <div className="px-3 pt-2 pb-1 font-display text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground/60 flex items-center gap-1.5">
+                    <div className="px-3 pt-2 pb-1 font-display text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground flex items-center gap-1.5">
                       {label === "Pinned" && <Pin className="w-3 h-3" strokeWidth={2.2} />}
                       {label}
                     </div>
@@ -451,7 +451,7 @@ const AppSidebar = ({
             Object.entries(groups).map(([label, items]) =>
               items.length === 0 ? null : (
                 <div key={label} className="mb-4">
-                  <div className="px-3 pb-2 font-display text-[11px] uppercase tracking-[0.16em] text-muted-foreground/60 flex items-center gap-1.5">
+                  <div className="px-3 pb-2 font-display text-[11px] uppercase tracking-[0.16em] text-muted-foreground flex items-center gap-1.5">
                     {label === "Pinned" && <Pin className="w-3 h-3" strokeWidth={2.2} />}
                     {label}
                   </div>
