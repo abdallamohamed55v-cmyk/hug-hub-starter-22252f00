@@ -243,8 +243,8 @@ const AnimatedInput = ({ value, onChange, onSend, onCancel, onPlusClick, disable
         </div>
       )}
 
-      {/* Desktop: gradient border ring wrapper (matches Media Hub card) */}
-      <div className="md:rounded-[26px] md:p-[1px] md:bg-gradient-to-b md:from-foreground/[0.12] md:to-foreground/[0.04]">
+      {/* Desktop: subtle semantic border wrapper (no glow / no shadow) */}
+      <div className="md:rounded-[26px] md:p-[1px] md:bg-border/60">
       <div className="chat-composer-frame pointer-events-auto rounded-[1.35rem] px-4 pt-1 pb-2 relative z-10 bg-background md:bg-card md:rounded-[25px] md:px-3.5 md:pt-3.5 md:pb-3 md:border md:border-foreground/[0.02]">
         <AnimatePresence>
           {hasQuestions && currentQuestion && (
@@ -386,7 +386,7 @@ const AnimatedInput = ({ value, onChange, onSend, onCancel, onPlusClick, disable
                 whileTap={{ scale: 0.9 }}
                 onClick={onSend}
                 disabled={disabled || !value.trim()}
-                className="shrink-0 w-9 h-9 md:h-10 md:w-auto md:px-4 md:gap-1.5 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-800 md:bg-transparent md:text-white hover:bg-foreground/15 transition-colors disabled:opacity-40 disabled:cursor-not-allowed md:ios26-button md:text-xs md:font-medium"
+                className="shrink-0 w-9 h-9 md:h-10 md:w-auto md:px-4 md:gap-1.5 flex items-center justify-center rounded-full bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed md:ios26-button md:text-xs md:font-medium"
                 aria-label="Send message"
               >
                 <ArrowUp className="w-[18px] h-[18px] md:w-3.5 md:h-3.5" strokeWidth={2} />
