@@ -23,6 +23,7 @@ const CodePreviewModal = lazy(() => import("@/components/modals/CodePreviewModal
 const ImagePreviewModal = lazy(() => import("@/components/modals/ImagePreviewModal"));
 const DeepResearchCard = lazy(() => import("@/components/chat/DeepResearchCard"));
 const ResearchNarration = lazy(() => import("@/components/research/ResearchNarration"));
+const ResearchProgressChecklist = lazy(() => import("@/components/research/ResearchProgressChecklist"));
 const LearnCard = lazy(() => import("@/components/learn/LearnCard"));
 import { parseSlidesOutline } from "@/lib/slidesOutlineParser";
 import { ChainOfThought, ChainOfThoughtStep, ChainOfThoughtTrigger, ChainOfThoughtContent, ChainOfThoughtItem } from "@/components/prompt-kit/chain-of-thought";
@@ -747,12 +748,53 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
   const isResearchActive = !!isStreaming || (!!isThinking && !content);
   const showSlidesInfoBox = role === "assistant" && (looksLikeSlidesInfo(displayContent) || (!!isSlidesMode && displayContent.trim().length > 0));
 
+  // Derive a coarse Deep Research progress state from the streaming searchStatus
+  // text so we can render the new ResearchProgressChecklist on top of the
+  // existing streaming pipeline (no backend change required).
+  const showResearchProgress =
+    role === "assistant" && !!isDeepResearch && isResearchActive && !showResearchCard;
+  const { rpStatus, rpProgress, rpStage, rpHosts } = (() => {
+    if (!showResearchProgress) {
+      return { rpStatus: "planning" as const, rpProgress: 0, rpStage: "", rpHosts: [] as string[] };
+    }
+    const s = (searchStatus || "").toLowerCase();
+    let status: "planning" | "searching" | "synthesizing" = "planning";
+    let progress = 8;
+    if (/synth|writing|composing|generat|final|report/.test(s)) { status = "synthesizing"; progress = 80; }
+    else if (/read|extract|sources?|browsing|deep_read|gather/.test(s)) { status = "searching"; progress = 55; }
+    else if (/search|query|queries|web/.test(s)) { status = "searching"; progress = 35; }
+    else if (/plan|prepar|map|angles/.test(s)) { status = "planning"; progress = 18; }
+    // Pull URL hosts mentioned in the latest content stream (best-effort).
+    const hosts = Array.from(
+      new Set(
+        (content.match(/https?:\/\/([^\s)\]"'>]+)/g) || [])
+          .map((u) => {
+            try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; }
+          })
+          .filter(Boolean),
+      ),
+    ).slice(0, 8);
+    return { rpStatus: status, rpProgress: progress, rpStage: searchStatus || "", rpHosts: hosts };
+  })();
+
   return (
     <Message className="mb-6 relative">
       <MessageContent>
       {showNarration && (
         <Suspense fallback={null}>
           <ResearchNarration items={narrations!} active={isResearchActive} />
+        </Suspense>
+      )}
+      {showResearchProgress && (
+        <Suspense fallback={null}>
+          <div className="mt-2">
+            <ResearchProgressChecklist
+              status={rpStatus}
+              progress={rpProgress}
+              stage={rpStage}
+              readHosts={rpHosts}
+            />
+          </div>
         </Suspense>
       )}
       {isThinking && !content && !showNarration ? (
