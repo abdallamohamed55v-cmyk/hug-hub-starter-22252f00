@@ -411,7 +411,7 @@ ${sectionRule}
 - For "callout","manifesto","pull-quote","poster-typo","definition" include only "title" + short "subtitle"; no image needed.
 - For "four-col","icon-grid","ribbon-cards","pillars","bento" include "bullets" with 4-6 items used as card text.
 - "image_query" MUST be 3-5 visual ENGLISH keywords. NO arabic/other scripts, NO punctuation.
-- Detect language from topic and put title/subtitle in THAT language.`;
+- LANGUAGE & DIALECT (HIGHEST PRIORITY): Detect the EXACT language AND dialect of the user's topic and write ALL textual fields (title, subtitle, body, bullets, steps, events, quotes, kickers, big_label, stats labels) in EXACTLY that same language and dialect. Arabic dialects (Egyptian/مصري, Khaleeji/خليجي, Levantine/شامي, Maghrebi/دارجة, Iraqi, MSA) MUST be mirrored — never default to MSA if user wrote in dialect. Mirror vocabulary, slang, particles, formality. Only "image_query" stays English.`;
   const user = `Language hint: ${language}\nTopic: ${topic}\n${content ? `Reference / user-provided material:\n${content.slice(0, 8000)}` : ""}`;
   const raw = await aiJson<unknown>([
     { role: "system", content: sys }, { role: "user", content: user },
