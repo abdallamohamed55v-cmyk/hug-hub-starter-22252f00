@@ -3649,8 +3649,8 @@ Ask me anything to get started!`;
                     {msg.role === "assistant" && msg.mode === "slides" && !msg.slidesDeck && !msg.standardSlides && !isLoading && (
                       <div className="px-3 md:px-12 mt-3">
                         <div className="rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl p-4 max-w-xl">
-                          <div className="text-[13px] font-medium text-foreground mb-1">عرض الشرائح غير متاح</div>
-                          <div className="text-[12px] text-muted-foreground mb-3">انقطع توليد العرض قبل اكتماله. تقدر تعيد توليده.</div>
+                          <div className="text-[13px] font-medium text-foreground mb-1">Slides not available</div>
+                          <div className="text-[12px] text-muted-foreground mb-3">Slide generation was interrupted before completing. You can regenerate it.</div>
                           <button
                             onClick={() => {
                               const topic = msg.slidesPendingTopic
@@ -3659,7 +3659,7 @@ Ask me anything to get started!`;
                             }}
                             className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-foreground text-background text-[12.5px] font-semibold hover:opacity-90 transition"
                           >
-                            إعادة توليد الشرائح
+                            Regenerate slides
                           </button>
                         </div>
                       </div>
