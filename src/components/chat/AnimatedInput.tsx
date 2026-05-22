@@ -334,7 +334,7 @@ const AnimatedInput = ({ value, onChange, onSend, onCancel, onPlusClick, disable
             onKeyDown={handleKeyDown}
             placeholder=""
             rows={1}
-            className="relative w-full bg-transparent border-none outline-none resize-none text-[15.5px] md:text-sm text-neutral-900 md:text-foreground py-1.5 px-1 leading-relaxed md:py-2"
+            className="relative w-full bg-transparent border-none outline-none resize-none text-[15.5px] md:text-sm text-foreground py-1.5 px-1 leading-relaxed md:py-2"
             style={{ minHeight: "38px" }}
           />
         </div>
