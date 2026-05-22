@@ -1490,8 +1490,25 @@ UNIVERSAL LANGUAGE & DIALECT RULE (HIGHEST PRIORITY — APPLIES TO EVERY MODE: c
 - Never default to Arabic, English, or any other language unless that's what the user actually used in their last message.
 - Never refuse a language. If you are uncertain about a phrase, infer from context and answer naturally rather than asking the user to switch languages.
 `;
-    const casualSystemText = `You are Megsy v1 (${MEGSY_TIERS[effectiveTier].label}) by Megsy AI. Reply briefly, warmly, and naturally. Match the user's exact language and dialect. Never mention model providers.${userContext}${universalLanguageRule}`;
-    const finalSystemText = (isCasualMessage ? casualSystemText : systemPrompt) + (isCasualMessage ? "" : universalLanguageRule);
+    // Deterministic language detection on latest user message → hard directive
+    const detectLang = (txt: string): { name: string } => {
+      const t = (txt || "").trim();
+      if (!t) return { name: "the user's language" };
+      if (/[\u0600-\u06FF]/.test(t)) return { name: "Arabic (mirror the exact dialect used — Egyptian/Khaleeji/Shami/Maghrebi/Iraqi/MSA)" };
+      if (/[\u4e00-\u9fff]/.test(t)) return { name: "Chinese" };
+      if (/[\u3040-\u30ff]/.test(t)) return { name: "Japanese" };
+      if (/[\uac00-\ud7af]/.test(t)) return { name: "Korean" };
+      if (/[\u0590-\u05FF]/.test(t)) return { name: "Hebrew" };
+      if (/[\u0900-\u097F]/.test(t)) return { name: "Hindi" };
+      if (/[\u0400-\u04FF]/.test(t)) return { name: "Russian" };
+      if (/[ñáéíóúü¿¡]/i.test(t) && /\b(el|la|los|las|de|que|por|para|hola|gracias)\b/i.test(t)) return { name: "Spanish" };
+      if (/[àâçéèêëîïôûùüÿœ]/i.test(t) && /\b(le|la|les|des|une|pour|avec|bonjour|merci)\b/i.test(t)) return { name: "French" };
+      return { name: "English" };
+    };
+    const detectedLang = detectLang(latestUserText || "");
+    const hardLangRule = `\n\nHARD LANGUAGE LOCK (overrides all prior context — including older conversation turns):\n- The user's LATEST message is in: ${detectedLang.name}.\n- You MUST reply in ${detectedLang.name}, even if previous turns were in a different language.\n- A single short word counts: if the user wrote one English word, reply in English. If they wrote one Arabic word, reply in Arabic.\n- Do NOT carry over the language of previous turns. Always mirror the LATEST user message.\n`;
+    const casualSystemText = `You are Megsy v1 (${MEGSY_TIERS[effectiveTier].label}) by Megsy AI. Reply briefly, warmly, and naturally. Match the user's exact language and dialect. Never mention model providers.${userContext}${universalLanguageRule}${hardLangRule}`;
+    const finalSystemText = (isCasualMessage ? casualSystemText : systemPrompt) + (isCasualMessage ? "" : (universalLanguageRule + hardLangRule));
     const systemMessage = {
       role: "system" as const,
       content: [
