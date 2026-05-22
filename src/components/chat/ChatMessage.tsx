@@ -177,12 +177,12 @@ const formatRawUrls = (text: string): string => {
 };
 
 const researchHeadingLabels = new Set([
-  "ابحث عنه في الويب",
-  "نظرة عامة",
-  "أبرز النقاط",
-  "معرض الصور",
-  "المصادر",
-  "المراجع",
+  "Search the web",
+  "Overview",
+  "Key Findings",
+  "Image Gallery",
+  "Sources",
+  "References",
   "overview",
   "key findings",
   "image gallery",
@@ -905,7 +905,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
                   >
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                     <span className="flex-1 text-start">
-                      {isAr ? "ملخص البحث" : "Research summary"}
+                      {"Research summary"}
                       {hasSteps && <span className="ms-2 text-[11px] text-muted-foreground">· {outline.steps.length}</span>}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${slidesInfoOpen ? "" : "-rotate-90"}`} />
@@ -965,7 +965,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
                     className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium text-foreground/90 hover:bg-foreground/5 transition"
                   >
                     <span className="flex-1 text-start">
-                      {isAr ? "هيكل العرض التقديمي" : "Presentation outline"}
+                      {"Presentation outline"}
                       {hasSteps && <span className="ms-2 text-[11px] text-muted-foreground">· {outline.steps.length}</span>}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${slidesInfoOpen ? "" : "-rotate-90"}`} />
@@ -1022,7 +1022,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/60 border border-border/40 text-xs font-medium text-foreground hover:border-primary/40 transition-colors">
-                    <span>المصادر</span>
+                    <span>Sources</span>
                     <span className="text-muted-foreground">({uniqueLinks.length})</span>
                   </button>
                 </PopoverTrigger>

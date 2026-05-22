@@ -194,7 +194,7 @@ const ResearchPreviewPage = () => {
   const handleDownload = async () => {
     if (!reportRef.current || exporting) return;
     setExporting(true);
-    const t = toast.loading(isRtl ? "جارٍ إنشاء ملف PDF…" : "Generating PDF…");
+    const t = toast.loading("Generating PDF…");
     try {
       const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
         import("html2canvas"), import("jspdf"),
@@ -268,10 +268,10 @@ const ResearchPreviewPage = () => {
 
       const safe = data.query.slice(0, 60).replace(/[\\/:*?"<>|]/g, "-").trim() || "research";
       pdf.save(`${safe}.pdf`);
-      toast.success(isRtl ? "تم التحميل" : "Downloaded", { id: t });
+      toast.success("Downloaded", { id: t });
     } catch (e) {
       console.error("[pdf]", e);
-      toast.error(isRtl ? "فشل إنشاء الملف" : "Failed to generate PDF", { id: t });
+      toast.error("Failed to generate PDF", { id: t });
     } finally { setExporting(false); }
   };
 

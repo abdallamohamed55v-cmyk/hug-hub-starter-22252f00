@@ -134,7 +134,7 @@ const DeepResearchCard = ({ query, report, images = [], sessionKey }: DeepResear
             onClick={(e) => { e.stopPropagation(); openPreview(); }}
             className="flex-1 inline-flex items-center justify-center h-10 rounded-2xl bg-foreground text-background text-[13px] font-medium hover:bg-foreground/90 transition-colors"
           >
-            <span>{isRtl ? "افتح المعاينة" : "Open Preview"}</span>
+            <span>{"Open Preview"}</span>
           </button>
           <button
             onClick={handleShare}
