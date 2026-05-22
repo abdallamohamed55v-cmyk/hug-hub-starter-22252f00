@@ -1031,12 +1031,12 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
           {/* Action buttons */}
           {!isStreaming && content && !showSlidesInfoBox && (
             <div className="flex items-center gap-1 mt-2">
-              <button onClick={handleCopy} className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-foreground liquid-glass-hover transition-all" title="Copy">
+              <button onClick={handleCopy} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground liquid-glass-hover transition-all" title="Copy">
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               <motion.button
                 onClick={() => handleLikeAction(liked === true ? null : true)}
-                className={`p-1.5 rounded-lg transition-all ${liked === true ? "text-primary" : "text-muted-foreground/50 hover:text-foreground liquid-glass-hover"}`}
+                className={`p-1.5 rounded-lg transition-all ${liked === true ? "text-primary" : "text-muted-foreground hover:text-foreground liquid-glass-hover"}`}
                 title="Like"
                 whileTap={{ scale: 1.3 }}
                 transition={{ type: "spring", stiffness: 500, damping: 15 }}
@@ -1045,7 +1045,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
               </motion.button>
               <motion.button
                 onClick={() => handleLikeAction(liked === false ? null : false)}
-                className={`p-1.5 rounded-lg transition-all ${liked === false ? "text-destructive" : "text-muted-foreground/50 hover:text-foreground liquid-glass-hover"}`}
+                className={`p-1.5 rounded-lg transition-all ${liked === false ? "text-destructive" : "text-muted-foreground hover:text-foreground liquid-glass-hover"}`}
                 title="Dislike"
                 whileTap={{ scale: 1.3 }}
                 transition={{ type: "spring", stiffness: 500, damping: 15 }}
@@ -1053,7 +1053,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
                 <ThumbsDown className="w-3.5 h-3.5" />
               </motion.button>
               {onShare && (
-                <button onClick={onShare} className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-foreground liquid-glass-hover transition-all" title="More">
+                <button onClick={onShare} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground liquid-glass-hover transition-all" title="More">
                   <Ellipsis className="w-3.5 h-3.5" />
                 </button>
               )}
