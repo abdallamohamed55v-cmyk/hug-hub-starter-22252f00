@@ -3,15 +3,15 @@
 // visual identity, plus a variant that drives the layout/typography rhythm
 // in the deck renderer.
 
-import iosCover from "@/assets/slide-templates/ios.jpg";
-import sketchCover from "@/assets/slide-templates/sketch.jpg";
-import threeDCover from "@/assets/slide-templates/3d.jpg";
-import megsyCover from "@/assets/slide-templates/megsy.jpg";
-import atelierCover from "@/assets/slide-templates/atelier.jpg";
-import swissCover from "@/assets/slide-templates/swiss.jpg";
-import neonCover from "@/assets/slide-templates/neon.jpg";
-import brutalistCover from "@/assets/slide-templates/brutalist.jpg";
-import cinematicCover from "@/assets/slide-templates/cinematic.jpg";
+import iosCover from "@/assets/slide-templates/ios.svg";
+import sketchCover from "@/assets/slide-templates/sketch.svg";
+import threeDCover from "@/assets/slide-templates/3d.svg";
+import megsyCover from "@/assets/slide-templates/megsy.svg";
+import atelierCover from "@/assets/slide-templates/atelier.svg";
+import swissCover from "@/assets/slide-templates/swiss.svg";
+import neonCover from "@/assets/slide-templates/neon.svg";
+import brutalistCover from "@/assets/slide-templates/brutalist.svg";
+import cinematicCover from "@/assets/slide-templates/cinematic.svg";
 
 export type SlidesCategory = "premium";
 
