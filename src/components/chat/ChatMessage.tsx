@@ -886,73 +886,11 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
             const al = detectLang(displayContent);
             // While a deep-research report is still streaming, wrap the live text
             // in a simple "live draft" box so it doesn't look like the final answer.
-            const isLiveResearchDraft = isStreaming && isDeepResearch && displayContent.trim().length > 0;
             const inner = (
               <div dir={langDir(al)} lang={al === "ar" ? "ar" : al === "en" ? "en" : undefined} className={`prose-chat text-foreground lang-${al} ${showSlidesInfoBox ? "slides-info-prose" : ""}`}>
                 <MarkdownRenderer content={displayContent} onLinkClick={handleLinkClick} onPreviewCode={handlePreviewCode} />
               </div>
             );
-            if (isLiveResearchDraft) {
-              const isAr = al === "ar";
-              const outline = parseSlidesOutline(displayContent);
-              const hasSteps = outline.steps.length > 0;
-              return (
-                <div className="slides-info-box rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl overflow-hidden" dir={langDir(al)}>
-                  <button
-                    type="button"
-                    onClick={() => setSlidesInfoOpen((v) => !v)}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium text-foreground/90 hover:bg-foreground/5 transition"
-                  >
-                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="flex-1 text-start">
-                      {"Research summary"}
-                      {hasSteps && <span className="ms-2 text-[11px] text-muted-foreground">· {outline.steps.length}</span>}
-                    </span>
-                    <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${slidesInfoOpen ? "" : "-rotate-90"}`} />
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {slidesInfoOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="slides-info-scroll border-t border-border/40 px-4 py-3 max-h-80 overflow-y-auto">
-                          {hasSteps ? (
-                            <>
-                              {outline.intro && (
-                                <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-3">{outline.intro}</p>
-                              )}
-                              <ChainOfThought>
-                                {outline.steps.map((step, i) => (
-                                  <ChainOfThoughtStep key={i}>
-                                    <ChainOfThoughtTrigger>
-                                      <span className="text-muted-foreground font-mono text-[11px] me-2">{String(i + 1).padStart(2, "0")}</span>
-                                      {step.title}
-                                    </ChainOfThoughtTrigger>
-                                    {step.items.length > 0 && (
-                                      <ChainOfThoughtContent>
-                                        {step.items.map((it, j) => (
-                                          <ChainOfThoughtItem key={j}>{it}</ChainOfThoughtItem>
-                                        ))}
-                                      </ChainOfThoughtContent>
-                                    )}
-                                  </ChainOfThoughtStep>
-                                ))}
-                              </ChainOfThought>
-                            </>
-                          ) : (
-                            inner
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            }
             if (showSlidesInfoBox) {
               const isAr = al === "ar";
               const outline = parseSlidesOutline(displayContent);
