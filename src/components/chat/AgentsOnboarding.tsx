@@ -173,7 +173,7 @@ const AgentsOnboarding = ({ alwaysShow = false, activeAgentId = null, onAgentTog
           onClick={finish}
           className="absolute left-2 bottom-[calc(100%+8px)] z-20 cursor-pointer pointer-events-auto"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-foreground text-background shadow-lg text-[12px] font-medium max-w-[260px]">
+          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-foreground text-background text-[12px] font-medium max-w-[260px]">
             <span>You'll find these services when tapping +</span>
             <CornerDownLeft className="w-3.5 h-3.5 rotate-180 shrink-0" strokeWidth={2} />
           </div>
