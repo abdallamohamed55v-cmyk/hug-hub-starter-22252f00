@@ -27,7 +27,7 @@ export default function MobileComposer({
   onMic,
   disabled,
   isLoading,
-  placeholder = "اسأل أي شيء…",
+  placeholder = "Ask anything…",
   autoFocus,
 }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);

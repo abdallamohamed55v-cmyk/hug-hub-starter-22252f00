@@ -104,7 +104,7 @@ export default function DocsFullScreenViewer({
               aria-label="Print"
             >
               <Printer className="w-4 h-4" />
-              <span className="hidden sm:inline">طباعة</span>
+              <span className="hidden sm:inline">Print</span>
             </button>
             {onDownloadPdf && (
               <button

@@ -217,13 +217,13 @@ const SlidesDeckCard = ({ deck }: Props) => {
           <div className="flex items-center gap-1.5 shrink-0">
             <button onClick={() => { setIdx(0); setOpen(true); }} className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-foreground text-background hover:opacity-90 transition">
               <Maximize2 className="w-3 h-3" />
-              معاينة
+              Preview
             </button>
             <button onClick={handlePptx} disabled={exportingPptx} className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-accent/60 hover:bg-accent border border-border/40 transition disabled:opacity-50">
               {exportingPptx ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
-              تحميل PPTX
+              Download PPTX
             </button>
-            <button onClick={handleHtml} disabled={exportingHtml} aria-label="HTML" title="تحميل HTML" className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border/60 hover:bg-muted/40 transition disabled:opacity-50">
+            <button onClick={handleHtml} disabled={exportingHtml} aria-label="HTML" title="Download HTML" className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border/60 hover:bg-muted/40 transition disabled:opacity-50">
               {exportingHtml ? <Loader2 className="w-3 h-3 animate-spin" /> : <FileCode2 className="w-3.5 h-3.5" />}
             </button>
           </div>

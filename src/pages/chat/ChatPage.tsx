@@ -268,14 +268,14 @@ const DEEP_RESEARCH_STATUS_FALLBACKS = [
 ];
 
 const DOCS_STATUS_FALLBACKS = [
-  "جاري فهم المطلوب…",
-  "جاري تحديد نوع المستند…",
-  "جاري تجهيز الأسئلة أو البيانات…",
-  "جاري بناء التصميم…",
-  "جاري كتابة المحتوى…",
-  "جاري إخراج المستند لايف…",
-  "جاري تنسيق النسخة النهائية…",
-  "قاربنا على الانتهاء…",
+  "Understanding your request…",
+  "Identifying the document type…",
+  "Preparing questions and data…",
+  "Building the design…",
+  "Writing the content…",
+  "Rendering the document live…",
+  "Polishing the final version…",
+  "Almost done…",
 ];
 
 const ChatPage = () => {
@@ -412,14 +412,14 @@ const ChatPage = () => {
   const buildInitialResearchNarration = useCallback((text: string) => {
     const topic = (text || "Deep Research").trim().replace(/\s+/g, " ").slice(0, 90);
     if (/[\u0600-\u06FF]/.test(topic)) {
-      return `تمام، فهمت إنك عايز بحث عميق عن: «${topic}». هبدأ أجمع المصادر الحقيقية وأقولك كل خطوة بتحصل.`;
+      return `Got it — starting a deep research on: "${topic}". I'll gather real sources and walk you through every step.`;
     }
     return `Got it — you want deep research about: “${topic}”. I’ll start gathering real sources and keep you updated step by step.`;
   }, []);
 
   const buildFinalResearchNarration = useCallback((text: string) => {
     return /[\u0600-\u06FF]/.test(text)
-      ? "خلصت البحث وجمعت المصادر وركّبت التقرير النهائي بشكل منظم. تقدر تفتح المعاينة وتشوف النسخة المناسبة للقراءة."
+      ? "Research complete. Sources collected and the final report assembled. Open the preview to read the formatted version."
       : "Research is complete — I gathered sources, cross-checked them, and assembled the final structured report for preview.";
   }, []);
 
@@ -511,7 +511,7 @@ const ChatPage = () => {
         body: JSON.stringify({
           model: "google/gemini-2.5-flash-lite",
           messages: [
-            { role: "user", content: `لخّص الرسالة التالية في عنوان قصير جدًا (كلمتين إلى ثلاث كلمات كحد أقصى) بنفس لغة الرسالة، بدون علامات اقتباس أو نقاط أو شرح. أعد العنوان فقط:\n\n${firstMessage.slice(0, 500)}` },
+            { role: "user", content: `Summarize the following message into a very short title (two to three words maximum) in the same language as the message, with no quotes, periods, or explanation. Return only the title:\n\n${firstMessage.slice(0, 500)}` },
           ],
         }),
       });
@@ -539,7 +539,7 @@ const ChatPage = () => {
         }
       }
       title = title.replace(/["'`*_#]+/g, "").replace(/\s+/g, " ").trim();
-      title = title.replace(/[.،!?؟…]+$/g, "").trim();
+      title = title.replace(/[.,!?…]+$/g, "").trim();
       const words = title.split(/\s+/).filter(Boolean).slice(0, 3);
       const finalTitle = words.join(" ").slice(0, 60);
       if (!finalTitle) return;
@@ -683,7 +683,7 @@ const ChatPage = () => {
               },
               onHtmlDone: async (full) => {
                 saveDocHtml(artifactId, full);
-                const friendly = `جاهز! أنشأت لك «${title}».`;
+                const friendly = `Done! Created "${title}" for you.`;
                 setMessages((prev) => prev.map((x) =>
                   x.id === messageId ? { ...x, content: friendly, docsArtifact: { artifactId, title, docType, html: full } } : x
                 ));
@@ -707,7 +707,7 @@ const ChatPage = () => {
               },
               onError: (msg) => {
                 setMessages((prev) => prev.map((x) =>
-                  x.id === messageId ? { ...x, content: `تعذّر إنشاء المستند: ${msg}` } : x
+                  x.id === messageId ? { ...x, content: `Could not create the document: ${msg}` } : x
                 ));
               },
             });
@@ -748,7 +748,7 @@ const ChatPage = () => {
               },
               onError: (msg) => {
                 setMessages((prev) => prev.map((x) => x.id === messageId
-                  ? { ...x, content: `تعذّر إنشاء العرض: ${msg}` }
+                  ? { ...x, content: `Could not create the presentation: ${msg}` }
                   : x));
               },
             });
@@ -888,7 +888,7 @@ const ChatPage = () => {
   const handleCancel = () => {
     if (abortControllerRef.current) {abortControllerRef.current.abort();abortControllerRef.current = null;}
     setIsLoading(false);setIsThinking(false);setSearchStatus("");
-    const STOPPED_MARK = "_تم إلغاء الرسالة._";
+    const STOPPED_MARK = "_Message cancelled._";
     let finalContent = "";
     setMessages((prev) => {
       if (prev.length === 0) return prev;
@@ -994,7 +994,7 @@ const ChatPage = () => {
     // ── Operator mode: keep the normal chat flow; render operator output as the assistant reply ──
     if (chatMode === "operator") {
       const assistantClientId = `assistant-${localTurnId}`;
-      setMessages((prev) => [...prev, userMsg, { role: "assistant", content: "يفكر...", clientId: assistantClientId, mode: "operator" }]);
+      setMessages((prev) => [...prev, userMsg, { role: "assistant", content: "Thinking...", clientId: assistantClientId, mode: "operator" }]);
       setInput("");
       setAttachedFiles([]);
       setPendingQuestions([]);
@@ -1007,12 +1007,12 @@ const ChatPage = () => {
           setOperatorRunId(runId);
           setMessages((prev) => prev.map((m) => m.clientId === assistantClientId ? { ...m, operatorRunId: runId } : m));
         } else {
-          setMessages((prev) => prev.map((m) => m.clientId === assistantClientId ? { ...m, content: "تعذّر بدء Megsy Operator. تأكد من تسجيل الدخول." } : m));
-          toast.error("تعذّر بدء Megsy Operator. تأكد من تسجيل الدخول.");
+          setMessages((prev) => prev.map((m) => m.clientId === assistantClientId ? { ...m, content: "Could not start Megsy Operator. Make sure you are signed in." } : m));
+          toast.error("Could not start Megsy Operator. Make sure you are signed in.");
         }
       } catch (e) {
-        setMessages((prev) => prev.map((m) => m.clientId === assistantClientId ? { ...m, content: "حصل خطأ في تشغيل Megsy Operator." } : m));
-        toast.error("خطأ في تشغيل Operator");
+        setMessages((prev) => prev.map((m) => m.clientId === assistantClientId ? { ...m, content: "An error occurred while running Megsy Operator." } : m));
+        toast.error("Error running Operator");
         console.error(e);
       } finally {
         isSubmittingRef.current = false;
@@ -1049,7 +1049,7 @@ const ChatPage = () => {
       const slidesTopic = (userInput || "").trim();
       const genericSlideAsks = /^(اعمل|اعمل لي|اعملي|اعمللي|عايز|عايزة|عاوز|اريد|أريد|ابغى|make|create|generate|build|do)\s*(لي|me)?\s*(سلايدس|سلايدز|عرض|بريزنتيشن|presentation|slides|deck|بريزنتيشين)\s*[!.؟?]*$/i;
       if (!slidesTopic || slidesTopic.length < 6 || genericSlideAsks.test(slidesTopic)) {
-        toast.error("اكتب موضوع السلايدس بوضوح، مثلاً: \"اعمل سلايدس عن تاريخ مصر القديمة في 10 شرائح\"");
+        toast.error("Please describe the slides topic clearly, e.g.: \"Create slides about ancient Egyptian history in 10 slides\"");
         setIsLoading(false); setIsThinking(false); setSearchStatus("");
         isSubmittingRef.current = false;
         // remove the empty assistant bubble we just appended
@@ -1223,7 +1223,7 @@ const ChatPage = () => {
           placeholderMessageId = await saveMessage(
             cid,
             "assistant",
-            "جاري إعداد المستند على الخادم… يمكنك إغلاق التبويب وسنحفظ النتيجة هنا.",
+            "Preparing the document on the server… you can close the tab and we'll save the result here.",
             undefined,
             { kind: "docsPending", originalPrompt: userInput, docsArtifact: { artifactId, title: "Document", docType: "document" } },
           );
@@ -1325,7 +1325,7 @@ const ChatPage = () => {
           }).eq("id", placeholderMessageId);
         } else if (finalHtml && finalHtml.length > 400 && finalMeta) {
           saveDocHtml(artifactId, finalHtml);
-          const friendly = `جاهز! أنشأت لك «${finalMeta.title}». اضغط على المعاينة لتشوفها كاملة أو حمّلها PDF.`;
+          const friendly = `Done! Created "${finalMeta.title}" for you. Open the preview to view it or download as PDF.`;
           setMessages((prev) => prev.map((m) =>
             m.clientId === `assistant-${localTurnId}` ? {
               ...m,
@@ -1343,11 +1343,11 @@ const ChatPage = () => {
             }).eq("id", placeholderMessageId);
           }
         } else if (!receivedJobId) {
-          toast.error("لم يتم إنشاء المستند — حاول مرة أخرى");
+          toast.error("Document was not created — please try again");
           setMessages((prev) => prev.map((m) =>
             m.clientId === `assistant-${localTurnId}` ? {
               ...m, docsArtifact: undefined,
-              content: "تعذّر إنشاء المستند هذه المرة. حاول إعادة الصياغة أو أعد المحاولة.",
+              content: "Could not create the document this time. Try rephrasing or try again.",
             } : m
           ));
         }
@@ -1356,7 +1356,7 @@ const ChatPage = () => {
         const errMsg = e instanceof Error ? e.message : "Docs generation failed";
         toast.error(errMsg);
         setMessages((prev) => prev.map((m) =>
-          m.clientId === `assistant-${localTurnId}` ? { ...m, docsArtifact: undefined, content: `تعذّر إنشاء المستند: ${errMsg}` } : m
+          m.clientId === `assistant-${localTurnId}` ? { ...m, docsArtifact: undefined, content: `Could not create the document: ${errMsg}` } : m
         ));
       } finally {
         stopDocsStatusFallback(); setIsLoading(false); setIsThinking(false); setSearchStatus("");
@@ -1660,7 +1660,7 @@ const ChatPage = () => {
           presenceChannelRef.current.send({ type: "broadcast", event: "ai_busy", payload: { user_id: chatUserId, busy: false } });
         }
         if (!assistantContent && searchImages.length === 0 && streamedProducts.length === 0) {
-          assistantContent = "حصل تأخير في توليد الرد، لكن طلبك وصل. جرّب إرساله مرة أخرى أو اختصره قليلًا.";
+          assistantContent = "There was a delay generating the response, but your request was received. Try sending it again or make it shorter.";
           setMessages((prev) => {
             const assistantIndex = prev.findIndex((m) => m.clientId === `assistant-${localTurnId}`);
             const targetIndex = assistantIndex >= 0 ? assistantIndex : prev.length - 1;
@@ -1897,7 +1897,7 @@ const ChatPage = () => {
         });
       } else {
         const placeholderId = `__parsing_${file.name}_${Date.now()}`;
-        setAttachedFiles((prev) => [...prev, { name: `${file.name} (جاري التحليل…)`, type: "file", data: placeholderId }]);
+        setAttachedFiles((prev) => [...prev, { name: `${file.name} (analyzing…)`, type: "file", data: placeholderId }]);
         try {
           const text = await parseUploadedFile(file);
           setAttachedFiles((prev) =>
@@ -1907,10 +1907,10 @@ const ChatPage = () => {
                 : f,
             ),
           );
-          toast.success(`تم تحليل ${file.name}`);
+          toast.success(`Analyzed ${file.name}`);
         } catch (err: any) {
           setAttachedFiles((prev) => prev.filter((f) => !(f.type === "file" && f.data === placeholderId)));
-          toast.error(`تعذّر قراءة ${file.name}`);
+          toast.error(`Could not read ${file.name}`);
         }
       }
     }
@@ -3392,7 +3392,7 @@ Ask me anything to get started!`;
             <div className="absolute inset-0 flex items-center justify-center px-6 pb-40 md:pb-[260px]">
               {/* Mobile: clean centered prompt — stable per chat open, accent word in a rotating color */}
               {(() => {
-                const name = userName?.split(" ")[0] || "صديقي";
+                const name = userName?.split(" ")[0] || "friend";
                 const FIRST_GREETINGS = [
                   { plain: `Hey`, accent: name, tail: "." },
                   { plain: `Welcome back,`, accent: name, tail: "." },
@@ -3405,12 +3405,12 @@ Ask me anything to get started!`;
                 ];
                 const RETURNING_GREETINGS = (() => {
                   const h = new Date().getHours();
-                  const timeGreeting = h < 12 ? "صباح الخير" : "مساء الخير";
+                  const timeGreeting = h < 12 ? "Good morning" : "Good evening";
                   return [
                     { plain: timeGreeting, accent: name, tail: "" },
-                    { plain: `كيف حالك،`, accent: name, tail: "؟" },
-                    { plain: `دعنا نطبخ شيئًا،`, accent: name, tail: "" },
-                    { plain: `أهلًا بعودتك،`, accent: name, tail: "" },
+                    { plain: `How are you,`, accent: name, tail: "?" },
+                    { plain: `Let's cook something up,`, accent: name, tail: "" },
+                    { plain: `Welcome back,`, accent: name, tail: "" },
                   ];
                 })();
                 const ACCENT_COLORS = [
@@ -3605,7 +3605,7 @@ Ask me anything to get started!`;
                                 });
                                 if (finalHtml && finalHtml.length > 400 && meta) {
                                   saveDocHtml(artifactId, finalHtml);
-                                  const friendly = `جاهز! أنشأت لك «${meta!.title}».`;
+                                  const friendly = `Done! Created "${meta!.title}" for you.`;
                                   setMessages((prev) => prev.map((mm) => matchesTarget(mm) ? {
                                     ...mm, content: friendly,
                                     docsClarify: undefined,
@@ -3628,9 +3628,9 @@ Ask me anything to get started!`;
                                   // Generation produced no usable HTML — surface the failure
                                   setMessages((prev) => prev.map((mm) => matchesTarget(mm) ? {
                                     ...mm, docsArtifact: undefined,
-                                    content: "تعذّر إنشاء المستند هذه المرة. حاول إعادة الصياغة أو أعد المحاولة.",
+                                    content: "Could not create the document this time. Try rephrasing or try again.",
                                   } : mm));
-                                  toast.error("لم يتم إنشاء المستند — حاول مرة أخرى");
+                                  toast.error("Document was not created — please try again");
                                 }
                               } catch (e) {
                                 const errMsg = e instanceof Error ? e.message : "Generation failed";
@@ -3638,7 +3638,7 @@ Ask me anything to get started!`;
                                 setMessages((prev) => prev.map((mm) => matchesTarget(mm) ? {
                                   ...mm,
                                   docsArtifact: undefined,
-                                  content: `تعذّر إنشاء المستند: ${errMsg}`,
+                                  content: `Could not create the document: ${errMsg}`,
                                 } : mm));
                               } finally { stopDocsStatusFallback(); setIsLoading(false); setIsThinking(false); setSearchStatus(""); }
                             }}

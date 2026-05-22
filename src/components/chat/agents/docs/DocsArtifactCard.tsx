@@ -65,10 +65,10 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
   // (no html2canvas glyph splitting). The user picks "Save as PDF" in the
   // print dialog — same flow Google Docs, Notion, Linear use.
   const downloadPdf = async () => {
-    if (!html) { toast.error("لا يوجد محتوى للتنزيل"); return; }
+    if (!html) { toast.error("No content to download"); return; }
     setExportingPdf(true);
     try {
-      toast.loading("جاري فتح نافذة الحفظ كـ PDF…", { id: "pdf-export" });
+      toast.loading("Opening Save as PDF dialog…", { id: "pdf-export" });
       const patched = patchDocHtml(html);
 
       const iframe = document.createElement("iframe");
@@ -104,20 +104,20 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
 
       win.focus();
       win.print();
-      toast.success("اختر «حفظ كـ PDF» من نافذة الطباعة", { id: "pdf-export" });
+      toast.success("Choose \"Save as PDF\" from the print dialog", { id: "pdf-export" });
       setTimeout(cleanup, 60_000);
     } catch (e) {
       console.error("[docs] downloadPdf failed", e);
-      toast.error("تعذر فتح نافذة الـ PDF — جرب التنزيل كـ HTML", { id: "pdf-export" });
+      toast.error("Could not open PDF dialog — try downloading as HTML", { id: "pdf-export" });
     } finally {
       setExportingPdf(false);
     }
   };
 
   const print = () => {
-    if (!html) { toast.error("لا يوجد محتوى للطباعة"); return; }
+    if (!html) { toast.error("No content to print"); return; }
     const w = window.open("", "_blank");
-    if (!w) { toast.error("النوافذ المنبثقة محظورة — فعّلها للطباعة"); return; }
+    if (!w) { toast.error("Pop-ups are blocked — enable them to print"); return; }
     const patched = patchDocHtml(html);
     w.document.open();
     w.document.write(patched);
@@ -174,14 +174,14 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
                 <div className="absolute inset-0 flex items-end justify-center p-4 bg-gradient-to-t from-background/80 to-transparent">
                   <div className="bg-foreground/90 text-background rounded-full h-8 px-3 inline-flex items-center gap-2 text-[11.5px] font-semibold shadow-sm">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>بيتولّد لايف…</span>
+                    <span>Generating live…</span>
                   </div>
                 </div>
               )}
             </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-[12px] text-muted-foreground">
-              المعاينة غير متاحة الآن
+              Preview is not available now
             </div>
           )}
         </button>
@@ -198,7 +198,7 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
               className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-foreground text-background hover:opacity-90 transition disabled:opacity-40"
             >
               <Maximize2 className="w-3 h-3" />
-              معاينة
+              Preview
             </button>
             <button
               onClick={downloadPdf}
@@ -206,13 +206,13 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
               className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-accent/60 hover:bg-accent border border-border/40 transition disabled:opacity-50"
             >
               {exportingPdf ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
-              تحميل PDF
+              Download PDF
             </button>
             <button
               onClick={print}
               disabled={!html}
-              aria-label="طباعة"
-              title="طباعة"
+              aria-label="Print"
+              title="Print"
               className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border/60 hover:bg-muted/40 transition disabled:opacity-50"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -221,7 +221,7 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
               onClick={downloadHtml}
               disabled={!html}
               aria-label="HTML"
-              title="تحميل HTML"
+              title="Download HTML"
               className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border/60 hover:bg-muted/40 transition disabled:opacity-50"
             >
               <FileCode2 className="w-3.5 h-3.5" />
