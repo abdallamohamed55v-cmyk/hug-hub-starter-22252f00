@@ -36,11 +36,21 @@ const SlidesTemplateSheet = ({ open, selectedId, onSelect, onClose }: Props) => 
                     }`}
                   >
                     <div
-                      className="relative w-full aspect-[16/9]"
+                      className="relative w-full aspect-[16/9] overflow-hidden"
                       style={{ background: `linear-gradient(135deg, ${t.colors[0]} 0%, ${t.colors[1]} 100%)` }}
                     >
+                      {t.cover && (
+                        <img
+                          src={t.cover}
+                          alt={`${t.name} template preview`}
+                          loading="lazy"
+                          width={1280}
+                          height={720}
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      )}
                       <div className="absolute inset-x-0 bottom-0 p-2.5 text-[10px] font-black uppercase tracking-[0.22em] text-white drop-shadow"
-                           style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.5))" }}>
+                           style={{ background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.65))" }}>
                         {t.name}
                       </div>
                       {active && (
