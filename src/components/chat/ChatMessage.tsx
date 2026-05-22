@@ -496,6 +496,7 @@ const UserMarkdown = ({ content, onLinkClick }: { content: string; onLinkClick: 
 const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, images, products, attachedImages, attachedFiles, onLike, onLikeMessage, liked, onShare, onStructuredAction, searchStatus, onEditUserMessage, onEditUserMessageAt, isDeepResearch, isSlidesMode, researchQuery, researchSessionKey, narrations, senderName, senderAvatar, isOtherMember, bubbleColor, messageId, reactions, onToggleReaction, currentUserId, readers, showReaders }: ChatMessageProps) => {
   const [copied, setCopied] = useState(false);
   const [slidesInfoOpen, setSlidesInfoOpen] = useState(true);
+  const [researchDraftOpen, setResearchDraftOpen] = useState(true);
   const [previewCode, setPreviewCode] = useState<{ code: string; lang: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectTextOpen, setSelectTextOpen] = useState(false);
