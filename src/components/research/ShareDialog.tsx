@@ -75,11 +75,8 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
 
         {/* Header */}
         <div className="px-5 sm:px-7 pt-3 pb-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/20">
-              <Share2 className="h-5 w-5" />
-            </div>
-            <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1">
+
               <SheetHeader>
                 <SheetTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight text-start">
                   {isRtl ? "مشاركة التقرير" : "Share report"}
