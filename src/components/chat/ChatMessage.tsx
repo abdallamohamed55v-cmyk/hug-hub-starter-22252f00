@@ -968,8 +968,7 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
                     onClick={() => setResearchDraftOpen((v) => !v)}
                     className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium text-foreground/90 hover:bg-foreground/5 transition"
                   >
-                    <span className="flex-1 text-start inline-flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                    <span className="flex-1 text-start">
                       {isAr ? "مسوّدة البحث" : "Research draft"}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${researchDraftOpen ? "" : "-rotate-90"}`} />
