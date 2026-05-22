@@ -41,7 +41,7 @@ export default function DocsLivePreview({ html, width = 320, className, onReady 
   return (
     <div
       ref={wrapperRef}
-      className={"relative overflow-hidden rounded-lg bg-white shadow-sm border border-border/50 " + (className ?? "")}
+      className={"relative overflow-hidden rounded-lg bg-white border border-border/50 " + (className ?? "")}
       style={{ width, height: A4_H * scale, direction: "ltr" }}
     >
       <iframe
