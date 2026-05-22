@@ -3232,11 +3232,11 @@ Ask me anything to get started!`;
   return (
     <>
       {/* Megsy Operator now renders as a tiny inline pill above the input — see below. */}
-      <div className="h-[100dvh] flex bg-[#f6f6f4] md:bg-background overflow-hidden">
+      <div className="h-[100dvh] flex bg-background overflow-hidden">
         {/* Desktop persistent sidebar */}
         <aside
           style={{ width: sidebarCollapsed ? 60 : 280 }}
-          className="hidden md:flex shrink-0 overflow-hidden border-r border-border/70 bg-[#f7f7f5] dark:bg-[#0a0a0a] transition-[width] duration-200 ease-out"
+          className="hidden md:flex shrink-0 overflow-hidden border-r border-border/70 bg-sidebar transition-[width] duration-200 ease-out"
         >
           <AppSidebar
             inline
@@ -3249,7 +3249,7 @@ Ask me anything to get started!`;
           />
         </aside>
 
-        <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden bg-[#f6f6f4] text-neutral-900 md:bg-background md:text-foreground">
+        <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden bg-background text-foreground">
         {/* Mobile drawer sidebar */}
         <div className="md:hidden">
           <AppSidebar
@@ -3457,7 +3457,7 @@ Ask me anything to get started!`;
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="md:hidden w-full text-center px-2"
                   >
-                    <p className="font-display text-[22px] sm:text-[26px] font-light tracking-tight text-neutral-800 md:text-foreground/85 leading-none whitespace-nowrap">
+                    <p className="font-display text-[22px] sm:text-[26px] font-light tracking-tight text-foreground/85 leading-none whitespace-nowrap">
                       {phrase.plain}{" "}
                       <span className={`${color} font-medium`}>{phrase.accent}</span>
                       {phrase.tail}
