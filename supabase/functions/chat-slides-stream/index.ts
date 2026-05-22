@@ -33,6 +33,8 @@ const REACT_TEMPLATES = new Set([
   "premium-baresol", "premium-robotic-tech", "premium-ai-video-gen",
   "premium-silent-wealth", "premium-aiventraq",
   "premium-megsy", "premium-glass-pitch", "premium-cinema-3d",
+  "premium-ios", "premium-sketch", "premium-3d", "premium-neon",
+  "premium-brutalist", "premium-cinematic",
 ]);
 
 // Standard template IDs → premium HTML shell. Picked by visual affinity so the
@@ -74,6 +76,12 @@ const PALETTES: Record<string, { primary: string; accent: string; bg: string; fg
   "premium-megsy":           { primary: "#3b82f6", accent: "#ec4899", bg: "#08070d", fg: "#f8fafc" },
   "premium-glass-pitch":     { primary: "#3b82f6", accent: "#a855f7", bg: "#070b1f", fg: "#f8fafc" },
   "premium-cinema-3d":       { primary: "#06b6d4", accent: "#f43f5e", bg: "#000814", fg: "#ffffff" },
+  "premium-ios":             { primary: "#7c9aff", accent: "#34d399", bg: "#030712", fg: "#f8fafc" },
+  "premium-sketch":          { primary: "#1f1b16", accent: "#b7791f", bg: "#f8f5ee", fg: "#1a1714" },
+  "premium-3d":              { primary: "#a78bfa", accent: "#67e8f9", bg: "#070713", fg: "#ffffff" },
+  "premium-neon":            { primary: "#22d3ee", accent: "#ec4899", bg: "#050816", fg: "#f0f9ff" },
+  "premium-brutalist":       { primary: "#0d0d0d", accent: "#fde047", bg: "#f5f3ee", fg: "#0d0d0d" },
+  "premium-cinematic":       { primary: "#5cbdb9", accent: "#99f6e4", bg: "#001f3f", fg: "#e8f0f8" },
 };
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
