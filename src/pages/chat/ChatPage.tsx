@@ -863,6 +863,26 @@ const ChatPage = () => {
                 }
                 removeActiveChatJob(entry.jobId);
               },
+              onStale: async (row) => {
+                // Worker died mid-run. Mark job failed server-side so it won't appear active anymore,
+                // then either persist whatever partial text we have or remove the placeholder.
+                try { await failStaleJob(entry.jobId); } catch { /* ignore */ }
+                const partial = (row.stream_text || assistantText || "").trim();
+                if (partial) {
+                  assistantText = partial;
+                  await persist();
+                } else {
+                  setMessages((prev) => prev.map((m) =>
+                    ((entry.messageId && m.id === entry.messageId) || m.clientId === clientId)
+                      ? { ...m, content: "Deep Research stopped unexpectedly. You can run it again.", chatJobId: undefined }
+                      : m,
+                  ));
+                  if (entry.messageId) {
+                    try { await supabase.from("messages").delete().eq("id", entry.messageId); } catch {}
+                  }
+                }
+                removeActiveChatJob(entry.jobId);
+              },
             });
           }
         } catch (e) { console.warn("[chat-resume] failed", e); }
