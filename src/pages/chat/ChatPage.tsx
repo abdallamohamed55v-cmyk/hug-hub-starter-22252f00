@@ -3202,7 +3202,8 @@ Ask me anything to get started!`;
           transition={{ duration: 0.16, ease: [0.22, 0.9, 0.3, 1] }}
           data-plus-menu
           onClick={(e) => e.stopPropagation()}
-          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[360px] max-h-[70vh] rounded-2xl border border-border bg-background shadow-[0_22px_55px_-16px_rgba(0,0,0,0.55)] overflow-y-auto p-2 flex-col`}
+          style={{ maxHeight: "min(70vh, 560px)" }}
+          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[360px] rounded-2xl border border-border bg-background shadow-[0_22px_55px_-16px_rgba(0,0,0,0.55)] overflow-y-auto overscroll-contain p-2 flex-col`}
         >
           {content}
         </motion.div>
