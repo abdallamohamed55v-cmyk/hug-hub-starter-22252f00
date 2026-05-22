@@ -696,12 +696,14 @@ serve(async (req) => {
           });
         } catch (e) {
           clearTimeout(killer);
+          clearInterval(heartbeat);
           console.error(`[bg-chat ${jobId}] inner fetch threw`, e);
           throw new Error(`inner fetch failed: ${e instanceof Error ? e.message : String(e)}`);
         }
         console.log(`[bg-chat ${jobId}] inner status=${resp.status} hasBody=${!!resp.body}`);
         if (!resp.ok || !resp.body) {
           clearTimeout(killer);
+          clearInterval(heartbeat);
           const errText = await resp.text().catch(() => "");
           throw new Error(errText || `HTTP ${resp.status}`);
         }
