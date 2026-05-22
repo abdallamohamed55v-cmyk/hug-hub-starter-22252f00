@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs></defs>
+  
+  <rect width="1280" height="720" fill="#050816"/>
+  <path d="M0 616 L1280 616" stroke="#22d3ee" stroke-width="3" opacity=".8"/>
+  <g stroke="#22d3ee" opacity=".45" stroke-width="2">
+    <path d="M116 720L524 314M278 720L580 314M440 720L636 314M602 720L692 314M764 720L748 314M926 720L804 314M1088 720L860 314"/>
+    <path d="M0 690h1280M95 652h1090M188 616h904M280 584h720M368 554h544M448 526h384M520 498h240M586 472h108"/>
+  </g>
+  <text x="640" y="256" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="110" font-weight="900" fill="#f0f9ff" stroke="#ec4899" stroke-width="3">NEON</text>
+  <text x="640" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" font-weight="800" fill="#22d3ee">CYBER GRID HUD</text>
+  <rect x="430" y="384" width="420" height="82" rx="8" fill="none" stroke="#ec4899" stroke-width="4" opacity=".9"/>
+
+</svg>

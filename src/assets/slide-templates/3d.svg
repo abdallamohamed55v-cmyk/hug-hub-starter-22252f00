@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070713"/><stop offset=".55" stop-color="#1e1b4b"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <radialGradient id="sphere" cx="35%" cy="28%"><stop stop-color="#fff"/><stop offset=".24" stop-color="#93c5fd"/><stop offset=".58" stop-color="#a78bfa"/><stop offset="1" stop-color="#111827"/></radialGradient>
+  <linearGradient id="ring" x1="0" x2="1"><stop stop-color="#67e8f9"/><stop offset=".5" stop-color="#f0abfc"/><stop offset="1" stop-color="#fef3c7"/></linearGradient>
+  <filter id="blur"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>
+  
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <ellipse cx="650" cy="610" rx="430" ry="58" fill="#000" opacity=".38" filter="url(#blur)"/>
+  <circle cx="430" cy="352" r="145" fill="url(#sphere)"/>
+  <ellipse cx="750" cy="348" rx="190" ry="82" fill="none" stroke="url(#ring)" stroke-width="56" transform="rotate(-18 750 348)"/>
+  <g transform="translate(868 214)">
+    <polygon points="0,90 140,20 278,92 140,168" fill="#d8b4fe" opacity=".85"/>
+    <polygon points="0,90 140,168 140,330 0,238" fill="#60a5fa" opacity=".8"/>
+    <polygon points="278,92 140,168 140,330 278,230" fill="#22d3ee" opacity=".72"/>
+  </g>
+  <text x="116" y="190" font-family="Arial Black, Arial, sans-serif" font-size="106" font-weight="900" fill="#fff">3D</text>
+  <text x="116" y="245" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#c4b5fd">CHROME STUDIO RENDER</text>
+
+</svg>
