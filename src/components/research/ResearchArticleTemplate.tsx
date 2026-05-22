@@ -137,6 +137,21 @@ const ResearchArticleTemplate = ({
     [sections],
   );
   const [activeId, setActiveId] = useState<string>("");
+  // Collapsible state — first section open by default, rest collapsed.
+  const [openMap, setOpenMap] = useState<Record<string, boolean>>(() => {
+    const m: Record<string, boolean> = {};
+    sections.forEach((s, i) => {
+      m[`${i}-${slugify(s.heading)}`] = i === 0;
+    });
+    return m;
+  });
+  const toggleSection = (id: string) =>
+    setOpenMap((prev) => ({ ...prev, [id]: !prev[id] }));
+  const setAll = (open: boolean) => {
+    const m: Record<string, boolean> = {};
+    tocItems.forEach((t) => { m[t.id] = open; });
+    setOpenMap(m);
+  };
   useEffect(() => {
     if (tocItems.length === 0) return;
     const obs = new IntersectionObserver(
