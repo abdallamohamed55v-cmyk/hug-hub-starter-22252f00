@@ -21,7 +21,7 @@ import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 
 import { streamChat } from "@/lib/streamChat";
 import { addActiveChatJob, removeActiveChatJob, getActiveChatJobs } from "@/lib/jobs/chatResume";
-import { resumeJob as resumeBgJob } from "@/lib/jobs/client";
+import { resumeJob as resumeBgJob, failStaleJob } from "@/lib/jobs/client";
 import { getActiveWorkspaceId } from "@/lib/activeWorkspace";
 import { shouldUseWebSearch } from "@/lib/shouldUseWebSearch";
 import { parseUploadedFile } from "@/lib/parseUploadedFile";
