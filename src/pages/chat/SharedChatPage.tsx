@@ -68,7 +68,7 @@ const SharedChatPage = () => {
         <div className="text-center space-y-4 max-w-sm">
           <h2 className="text-xl font-bold text-foreground">Chat not found</h2>
           <p className="text-sm text-muted-foreground">This shared chat doesn't exist or has been made private.</p>
-          <button onClick={() => navigate("/")} className="px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-semibold shadow-lg shadow-purple-500/25 hover:opacity-95 transition">
+          <button onClick={() => navigate("/")} className="px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-semibold hover:opacity-95 transition">
             Go to Megsy
           </button>
         </div>
@@ -135,7 +135,7 @@ const SharedChatPage = () => {
               </p>
               <button
                 onClick={() => navigate("/auth")}
-                className="mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-semibold shadow-xl shadow-purple-500/30 hover:opacity-95 transition"
+                className="mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white text-sm font-semibold hover:opacity-95 transition"
               >
                 Join Megsy free
               </button>

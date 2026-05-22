@@ -158,7 +158,7 @@ export default function DocsClarifyCard({ reason, questions, onSubmit, busy }: P
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="inline-flex items-center gap-2.5 rounded-full border border-border/60 bg-card/70 backdrop-blur-xl px-3.5 h-9 shadow-sm"
+        className="inline-flex items-center gap-2.5 rounded-full border border-border/60 bg-card/70 backdrop-blur-xl px-3.5 h-9"
       >
         <span className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
           <Check className="w-3 h-3" strokeWidth={3} />
@@ -180,7 +180,7 @@ export default function DocsClarifyCard({ reason, questions, onSubmit, busy }: P
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full max-w-xl rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl p-4 md:p-5 shadow-sm"
+      className="w-full max-w-xl rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl p-4 md:p-5"
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">

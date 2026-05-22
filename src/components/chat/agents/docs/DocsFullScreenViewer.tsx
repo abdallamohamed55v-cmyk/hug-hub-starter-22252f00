@@ -141,7 +141,7 @@ export default function DocsFullScreenViewer({
 
           {/* Paper — keeps A4 proportions, fits available space */}
           <div
-            className="relative bg-white shadow-2xl rounded-lg overflow-hidden"
+            className="relative bg-white rounded-lg overflow-hidden"
             style={{
               aspectRatio: `${A4_W} / ${A4_H}`,
               height: "100%",
@@ -180,7 +180,7 @@ export default function DocsFullScreenViewer({
                   onClick={() => setIdx(i)}
                   aria-label={`Page ${i + 1}`}
                   className={`relative shrink-0 w-24 rounded-md overflow-hidden transition ring-2 bg-white ${
-                    i === idx ? "ring-white shadow-lg" : "ring-transparent opacity-60 hover:opacity-100"
+                    i === idx ? "ring-white" : "ring-transparent opacity-60 hover:opacity-100"
                   }`}
                   style={{ aspectRatio: `${A4_W} / ${A4_H}` }}
                 >

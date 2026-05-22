@@ -172,7 +172,7 @@ export default function DocsArtifactCard({ artifactId, title, docType, html: inl
               {/* Streaming overlay */}
               {isStreaming && (
                 <div className="absolute inset-0 flex items-end justify-center p-4 bg-gradient-to-t from-background/80 to-transparent">
-                  <div className="bg-foreground/90 text-background rounded-full h-8 px-3 inline-flex items-center gap-2 text-[11.5px] font-semibold shadow-sm">
+                  <div className="bg-foreground/90 text-background rounded-full h-8 px-3 inline-flex items-center gap-2 text-[11.5px] font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Generating live…</span>
                   </div>

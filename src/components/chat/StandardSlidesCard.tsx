@@ -92,7 +92,7 @@ const StandardSlidesCard = ({ title, templateName, url, colors }: Props) => {
             </header>
 
             <div className="flex-1 px-3 sm:px-6 pb-6 min-h-0">
-              <div className="w-full h-full rounded-2xl overflow-hidden bg-white shadow-2xl">
+              <div className="w-full h-full rounded-2xl overflow-hidden bg-white">
                 <iframe
                   title={title}
                   src={url}

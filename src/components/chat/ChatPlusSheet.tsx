@@ -139,7 +139,7 @@ export default function ChatPlusSheet({
                   }`}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
                       searchEnabled ? "translate-x-5" : "translate-x-0.5"
                     }`}
                   />

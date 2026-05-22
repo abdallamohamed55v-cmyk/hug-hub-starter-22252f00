@@ -320,7 +320,7 @@ const SelectTextModal = ({ open, onClose, text, onCopy }: { open: boolean; onClo
           exit={{ opacity: 0, scale: 0.96, y: 8 }}
           transition={{ type: "spring", damping: 24, stiffness: 320 }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg max-h-[80vh] flex flex-col rounded-3xl liquid-glass border border-border/30 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.45)] overflow-hidden"
+          className="w-full max-w-lg max-h-[80vh] flex flex-col rounded-3xl liquid-glass border border-border/30 overflow-hidden"
         >
           <div className="flex items-center justify-between px-5 pt-5 pb-3">
             <div>
@@ -395,7 +395,7 @@ const ReactionsRow = ({ reactions, currentUserId, onToggle, messageId, align }: 
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 4 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute z-50 ${align === "right" ? "right-0" : "left-0"} bottom-full mb-1 flex gap-1 p-1.5 rounded-2xl liquid-glass border border-border/30 shadow-[0_12px_30px_-8px_rgba(0,0,0,0.35)]`}
+                className={`absolute z-50 ${align === "right" ? "right-0" : "left-0"} bottom-full mb-1 flex gap-1 p-1.5 rounded-2xl liquid-glass border border-border/30`}
               >
                 {REACTION_EMOJIS.map((e) => (
                   <button
