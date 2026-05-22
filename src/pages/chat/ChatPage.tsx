@@ -3459,7 +3459,7 @@ Ask me anything to get started!`;
                     transition={{ duration: 0.45, ease: "easeOut" }}
                     className="md:hidden w-full text-center px-2"
                   >
-                    <p className="font-display text-[22px] sm:text-[26px] font-light tracking-tight text-neutral-800 md:text-foreground/85 leading-none whitespace-nowrap">
+                    <p className="font-display text-[20px] sm:text-[26px] font-light tracking-tight text-neutral-800 md:text-foreground/85 leading-tight break-words">
                       {phrase.plain}{" "}
                       <span className={`${color} font-medium`}>{phrase.accent}</span>
                       {phrase.tail}
