@@ -3554,6 +3554,7 @@ export type Database = {
       }
       research_jobs: {
         Row: {
+          approved_at: string | null
           conversation_id: string | null
           created_at: string
           duration_ms: number | null
@@ -3575,6 +3576,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approved_at?: string | null
           conversation_id?: string | null
           created_at?: string
           duration_ms?: number | null
@@ -3596,6 +3598,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approved_at?: string | null
           conversation_id?: string | null
           created_at?: string
           duration_ms?: number | null
