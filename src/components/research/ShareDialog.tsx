@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Check, Copy, Mail, Link2 } from "lucide-react";
+import { Check, Copy, Mail, Link2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 type Props = {
@@ -42,42 +42,12 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
   const enc = encodeURIComponent;
 
   const channels = [
-    {
-      name: "WhatsApp",
-      Icon: Whatsapp,
-      href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`,
-      color: "bg-[#25D366] text-white",
-    },
-    {
-      name: "X",
-      Icon: XIcon,
-      href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`,
-      color: "bg-foreground text-background",
-    },
-    {
-      name: "Facebook",
-      Icon: Facebook,
-      href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,
-      color: "bg-[#1877F2] text-white",
-    },
-    {
-      name: "Telegram",
-      Icon: Telegram,
-      href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`,
-      color: "bg-[#229ED9] text-white",
-    },
-    {
-      name: "LinkedIn",
-      Icon: LinkedIn,
-      href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
-      color: "bg-[#0A66C2] text-white",
-    },
-    {
-      name: isRtl ? "البريد" : "Email",
-      Icon: Mail,
-      href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`,
-      color: "bg-muted text-foreground",
-    },
+    { name: "WhatsApp", Icon: Whatsapp, href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`, color: "bg-[#25D366] text-white shadow-[0_8px_20px_-8px_rgba(37,211,102,0.6)]" },
+    { name: "X", Icon: XIcon, href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, color: "bg-foreground text-background shadow-[0_8px_20px_-8px_hsl(var(--foreground)/0.6)]" },
+    { name: "Facebook", Icon: Facebook, href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, color: "bg-[#1877F2] text-white shadow-[0_8px_20px_-8px_rgba(24,119,242,0.6)]" },
+    { name: "Telegram", Icon: Telegram, href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`, color: "bg-[#229ED9] text-white shadow-[0_8px_20px_-8px_rgba(34,158,217,0.6)]" },
+    { name: "LinkedIn", Icon: LinkedIn, href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, color: "bg-[#0A66C2] text-white shadow-[0_8px_20px_-8px_rgba(10,102,194,0.6)]" },
+    { name: isRtl ? "البريد" : "Email", Icon: Mail, href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`, color: "bg-muted text-foreground border border-foreground/10" },
   ];
 
   const copy = async () => {
@@ -93,56 +63,74 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[440px] p-0 overflow-hidden border-foreground/10 bg-background/95 backdrop-blur-2xl" dir={isRtl ? "rtl" : "ltr"}>
-        <div className="px-6 pt-6 pb-2">
-          <DialogHeader>
-            <DialogTitle className="text-base font-semibold tracking-tight">
-              {isRtl ? "مشاركة التقرير" : "Share report"}
-            </DialogTitle>
-          </DialogHeader>
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-1">{title}</p>
+      <DialogContent
+        className="sm:max-w-[460px] p-0 overflow-hidden border-foreground/10 bg-background/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl"
+        dir={isRtl ? "rtl" : "ltr"}
+      >
+        {/* Header with gradient accent */}
+        <div className="relative px-5 sm:px-7 pt-6 sm:pt-7 pb-4 sm:pb-5">
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+          <div className="relative flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/20">
+              <Share2 className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <DialogHeader>
+                <DialogTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight">
+                  {isRtl ? "مشاركة التقرير" : "Share report"}
+                </DialogTitle>
+              </DialogHeader>
+              <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed">
+                {title}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Channel grid */}
-        <div className="grid grid-cols-3 gap-2 px-5 pb-4">
-          {channels.map(({ name, Icon, href, color }) => (
-            <a
-              key={name}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex flex-col items-center gap-2 rounded-xl border border-transparent px-2 py-3 transition hover:border-foreground/10 hover:bg-foreground/5"
-            >
-              <span className={`flex h-11 w-11 items-center justify-center rounded-full ${color} transition group-hover:scale-105`}>
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="text-[11px] font-medium text-foreground/80">{name}</span>
-            </a>
-          ))}
+        <div className="px-4 sm:px-5 pb-4">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2">
+            {channels.map(({ name, Icon, href, color }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 rounded-2xl px-2 py-3 sm:py-3.5 transition-all hover:bg-foreground/5 active:scale-95"
+              >
+                <span className={`flex h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-2xl ${color} transition-transform duration-200 group-hover:scale-110 group-hover:-translate-y-0.5`}>
+                  <Icon className="h-5 w-5 sm:h-[18px] sm:w-[18px]" />
+                </span>
+                <span className="text-[11px] font-medium text-foreground/80 truncate max-w-full">{name}</span>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Copy link bar */}
-        <div className="border-t border-foreground/10 bg-muted/30 px-5 py-4">
-          <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        <div className="border-t border-foreground/10 bg-muted/40 px-5 sm:px-7 py-4 sm:py-5">
+          <label className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {isRtl ? "رابط المشاركة" : "Share link"}
           </label>
-          <div className="mt-2 flex items-center gap-2 rounded-xl border border-foreground/10 bg-background ps-3">
+          <div className="mt-2 flex items-center gap-1 rounded-2xl border border-foreground/10 bg-background ps-3 shadow-sm focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/15 transition">
             <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
               readOnly
               value={url}
               onFocus={(e) => e.currentTarget.select()}
-              className="min-w-0 flex-1 bg-transparent py-2.5 text-xs text-foreground/90 outline-none"
+              className="min-w-0 flex-1 bg-transparent py-2.5 text-xs sm:text-[13px] text-foreground/90 outline-none"
               dir="ltr"
             />
             <button
               onClick={copy}
-              className={`m-1 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                copied ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-foreground text-background hover:opacity-90"
+              className={`m-1 inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-all active:scale-95 ${
+                copied
+                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                  : "bg-foreground text-background hover:opacity-90 shadow-sm"
               }`}
             >
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? (isRtl ? "تم" : "Copied") : (isRtl ? "نسخ" : "Copy")}
+              <span>{copied ? (isRtl ? "تم" : "Copied") : (isRtl ? "نسخ" : "Copy")}</span>
             </button>
           </div>
         </div>
