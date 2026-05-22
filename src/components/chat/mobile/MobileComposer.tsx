@@ -49,7 +49,7 @@ export default function MobileComposer({
   return (
     <div
       data-testid="mobile-composer"
-      className="md:hidden luma-card flex items-end gap-2 px-2 py-2 shadow-sm"
+      className="md:hidden luma-card flex items-end gap-2 px-2 py-2"
       style={{
         borderRadius: "1.5rem",
         border: "2.5px solid hsl(var(--foreground) / 0.5)",

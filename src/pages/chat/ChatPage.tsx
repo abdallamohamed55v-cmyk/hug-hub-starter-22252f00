@@ -2897,7 +2897,7 @@ Ask me anything to get started!`;
                           aria-hidden="true"
                         >
                           <span
-                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-background shadow transition-transform ${enabled ? "translate-x-[14px]" : "translate-x-[2px]"}`}
+                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-background transition-transform ${enabled ? "translate-x-[14px]" : "translate-x-[2px]"}`}
                           />
                         </span>
                       </div>
