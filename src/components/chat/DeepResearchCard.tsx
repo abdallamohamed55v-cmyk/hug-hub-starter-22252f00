@@ -1,10 +1,7 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { FileText, Download, Share2, Loader2, Sparkles, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { detectResearchReportDirection, normalizeResearchReport } from "@/lib/normalizeResearchReport";
-import { supabase } from "@/integrations/supabase/client";
+import ExportMenu from "@/components/research/ExportMenu";
 
 interface DeepResearchCardProps {
   query: string;
