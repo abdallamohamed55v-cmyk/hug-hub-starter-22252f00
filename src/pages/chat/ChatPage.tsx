@@ -3157,34 +3157,37 @@ Ask me anything to get started!`;
             y: { type: "spring", stiffness: 380, damping: 36 },
             maxHeight: { type: "spring", stiffness: 220, damping: 28, mass: 0.7 },
           }}
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={{ top: 0, bottom: 0.4 }}
-          dragMomentum={false}
-          onDragEnd={(_, info) => {
-            if (info.offset.y > 120 || info.velocity.y > 600) {
-              setPlusMenuOpen(false);
-            } else if (plusExpanded && info.offset.y > 60) {
-              setPlusExpanded(false);
-            }
-          }}
           data-plus-menu
-          className="fixed inset-x-0 bottom-0 z-[56] w-full rounded-t-[28px] overflow-hidden bg-background border-t border-border/40 shadow-[0_-8px_40px_-12px_rgba(0,0,0,0.18)] flex flex-col touch-pan-y md:hidden"
+          className="fixed inset-x-0 bottom-0 z-[56] w-full rounded-t-[28px] overflow-hidden bg-background border-t border-border/40 shadow-[0_-8px_40px_-12px_rgba(0,0,0,0.18)] flex flex-col md:hidden"
         >
-          <div className="flex justify-center pb-2 pt-2 shrink-0 cursor-grab active:cursor-grabbing">
+          <motion.div
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.4 }}
+            dragMomentum={false}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 120 || info.velocity.y > 600) {
+                setPlusMenuOpen(false);
+              } else if (plusExpanded && info.offset.y > 60) {
+                setPlusExpanded(false);
+              }
+            }}
+            className="flex justify-center pb-2 pt-2 shrink-0 cursor-grab active:cursor-grabbing touch-none"
+          >
             <div className="w-10 h-1.5 rounded-full bg-foreground/20" />
-          </div>
+          </motion.div>
           <div
             onScroll={(e) => {
               const top = e.currentTarget.scrollTop;
               if (!plusExpanded && top > 4) setPlusExpanded(true);
               else if (plusExpanded && top <= 0) setPlusExpanded(false);
             }}
-            className="overflow-y-auto overscroll-contain px-4 pt-1 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] flex-1"
+            className="overflow-y-auto overscroll-contain px-4 pt-1 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] flex-1 touch-pan-y"
           >
             {content}
           </div>
         </motion.div>
+
 
         {/* Desktop: backdrop to close on outside click */}
         <div
