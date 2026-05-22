@@ -76,7 +76,7 @@ const ChatDesktopDialog = ({
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[1000] bg-black/70" onClick={() => onOpenChange(false)} />
+      <div className="fixed inset-0 z-[1000] bg-black/30 backdrop-blur-[2px] animate-in fade-in-0 duration-200" onClick={() => onOpenChange(false)} />
       <div
         role="dialog"
         aria-modal="true"
