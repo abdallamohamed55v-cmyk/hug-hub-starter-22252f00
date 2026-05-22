@@ -455,7 +455,7 @@ Per slide return (in addition to all outline fields, kept intact):
 - "quote": for quote slides — 18-35 word memorable quote. "attribution": plausible person+role.
 
 Hard rules:
-- Output language = ${language}.
+- LANGUAGE & DIALECT (HIGHEST PRIORITY): Output language hint = ${language}. Detect the EXACT dialect from the topic/reference (Egyptian/مصري, Khaleeji/خليجي, Levantine/شامي, Maghrebi/دارجة, Iraqi, Sudanese, Yemeni, MSA/فصحى, or any other world language) and write ALL textual fields in EXACTLY that same language AND dialect. Mirror vocabulary, particles, slang, formality. Never default to MSA if user wrote in dialect.
 - Use the reference material as ground truth; expand with widely-known facts when sparse.
 - NEVER produce empty required fields. NEVER write filler. NEVER repeat ideas.
 - Bullets and body must NOT duplicate each other.
