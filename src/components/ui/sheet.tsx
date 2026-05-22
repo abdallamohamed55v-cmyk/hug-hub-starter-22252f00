@@ -54,7 +54,12 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
   ({ side = "right", className, children, ...props }, ref) => (
     <SheetPortal>
       <SheetOverlay />
-      <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+      <SheetPrimitive.Content
+        ref={ref}
+        aria-describedby={props["aria-describedby"] ?? undefined}
+        className={cn(sheetVariants({ side }), className)}
+        {...props}
+      >
         {children}
       </SheetPrimitive.Content>
     </SheetPortal>
