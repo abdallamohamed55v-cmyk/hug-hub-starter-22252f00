@@ -1,0 +1,152 @@
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Check, Copy, Mail, Link2 } from "lucide-react";
+import { toast } from "sonner";
+
+type Props = {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  url: string;
+  title: string;
+  isRtl?: boolean;
+};
+
+const Whatsapp = (p: any) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M19.05 4.91A10 10 0 0 0 4.06 18.39L3 22l3.7-1.04A10 10 0 1 0 19.05 4.9Zm-7.04 15.43a8.3 8.3 0 0 1-4.24-1.16l-.3-.18-2.2.62.62-2.14-.2-.32A8.32 8.32 0 1 1 12 20.34Zm4.55-6.22c-.25-.13-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.13s-.64.8-.78.97c-.14.17-.29.18-.54.06-.25-.13-1.05-.39-2-1.23a7.5 7.5 0 0 1-1.39-1.72c-.14-.25-.02-.39.11-.51.11-.11.25-.29.38-.43.13-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.34-.76-1.84-.2-.49-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31s-.86.84-.86 2.05.88 2.38 1 2.55c.13.17 1.74 2.66 4.22 3.73.59.25 1.05.4 1.41.51.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z" />
+  </svg>
+);
+const XIcon = (p: any) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M18.244 2H21l-6.52 7.45L22 22h-6.84l-4.78-6.26L4.8 22H2l7.04-8.05L2 2h6.92l4.32 5.71L18.24 2Zm-2.4 18h1.5L7.27 4h-1.6l10.17 16Z" />
+  </svg>
+);
+const Facebook = (p: any) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" />
+  </svg>
+);
+const Telegram = (p: any) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="m9.78 14.65 4.36 3.22c.5.27.85.13 1-.46l1.81-8.55c.2-.74-.27-1.07-.74-.86l-10.66 4.1c-.73.3-.72.7-.13.88l2.74.85 6.34-4c.3-.18.57-.08.35.12" />
+  </svg>
+);
+const LinkedIn = (p: any) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14ZM8.34 18.34V10.5H5.67v7.84h2.67ZM7 9.34a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1Zm11.34 9V13.9c0-2.47-1.32-3.62-3.07-3.62-1.42 0-2.05.78-2.4 1.32V10.5h-2.66c.04.74 0 7.84 0 7.84h2.66v-4.38c0-.24.02-.48.09-.65.19-.48.63-.97 1.36-.97.96 0 1.35.73 1.35 1.8v4.2h2.67Z" />
+  </svg>
+);
+
+export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: Props) {
+  const [copied, setCopied] = useState(false);
+  const enc = encodeURIComponent;
+
+  const channels = [
+    {
+      name: "WhatsApp",
+      Icon: Whatsapp,
+      href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`,
+      color: "bg-[#25D366] text-white",
+    },
+    {
+      name: "X",
+      Icon: XIcon,
+      href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`,
+      color: "bg-foreground text-background",
+    },
+    {
+      name: "Facebook",
+      Icon: Facebook,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,
+      color: "bg-[#1877F2] text-white",
+    },
+    {
+      name: "Telegram",
+      Icon: Telegram,
+      href: `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`,
+      color: "bg-[#229ED9] text-white",
+    },
+    {
+      name: "LinkedIn",
+      Icon: LinkedIn,
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
+      color: "bg-[#0A66C2] text-white",
+    },
+    {
+      name: isRtl ? "البريد" : "Email",
+      Icon: Mail,
+      href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`,
+      color: "bg-muted text-foreground",
+    },
+  ];
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success(isRtl ? "تم نسخ الرابط" : "Link copied");
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      toast.error(isRtl ? "تعذر النسخ" : "Copy failed");
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[440px] p-0 overflow-hidden border-foreground/10 bg-background/95 backdrop-blur-2xl" dir={isRtl ? "rtl" : "ltr"}>
+        <div className="px-6 pt-6 pb-2">
+          <DialogHeader>
+            <DialogTitle className="text-base font-semibold tracking-tight">
+              {isRtl ? "مشاركة التقرير" : "Share report"}
+            </DialogTitle>
+          </DialogHeader>
+          <p className="mt-1 text-xs text-muted-foreground line-clamp-1">{title}</p>
+        </div>
+
+        {/* Channel grid */}
+        <div className="grid grid-cols-3 gap-2 px-5 pb-4">
+          {channels.map(({ name, Icon, href, color }) => (
+            <a
+              key={name}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-2 rounded-xl border border-transparent px-2 py-3 transition hover:border-foreground/10 hover:bg-foreground/5"
+            >
+              <span className={`flex h-11 w-11 items-center justify-center rounded-full ${color} transition group-hover:scale-105`}>
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="text-[11px] font-medium text-foreground/80">{name}</span>
+            </a>
+          ))}
+        </div>
+
+        {/* Copy link bar */}
+        <div className="border-t border-foreground/10 bg-muted/30 px-5 py-4">
+          <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            {isRtl ? "رابط المشاركة" : "Share link"}
+          </label>
+          <div className="mt-2 flex items-center gap-2 rounded-xl border border-foreground/10 bg-background ps-3">
+            <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              readOnly
+              value={url}
+              onFocus={(e) => e.currentTarget.select()}
+              className="min-w-0 flex-1 bg-transparent py-2.5 text-xs text-foreground/90 outline-none"
+              dir="ltr"
+            />
+            <button
+              onClick={copy}
+              className={`m-1 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                copied ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-foreground text-background hover:opacity-90"
+              }`}
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? (isRtl ? "تم" : "Copied") : (isRtl ? "نسخ" : "Copy")}
+            </button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

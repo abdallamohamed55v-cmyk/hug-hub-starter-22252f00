@@ -1,0 +1,12 @@
+## Manual override config for ESLint/Semgrep noise
+
+# Build artifacts
+dist/
+coverage/
+playwright-report/
+test-results/
+node_modules/
+
+# Generated files
+src/integrations/supabase/types.ts
+src/**/*.generated.*

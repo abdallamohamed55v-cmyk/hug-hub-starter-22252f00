@@ -1,0 +1,24 @@
+name: Load Test (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "Which k6 script to run"
+        required: true
+        default: "smoke"
+        type: choice
+        options: [smoke, load, stress, spike, soak]
+      base_url:
+        description: "Target BASE_URL"
+        required: true
+        default: "https://example.com"
+
+jobs:
+  k6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: grafana/setup-k6-action@v1
+      - name: Run k6 ${{ inputs.script }}
+        run: k6 run -e BASE_URL=${{ inputs.base_url }} load-tests/${{ inputs.script }}.js
