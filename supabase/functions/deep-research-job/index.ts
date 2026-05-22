@@ -202,7 +202,8 @@ async function synthesize(
 }
 
 // ---- Background pipeline ----
-async function runPipeline(jobId: string, query: string, language: string | null) {
+// Phase 1: planning only. Stops at `awaiting_approval`.
+async function runPlanningPhase(jobId: string, query: string, language: string | null) {
   const startedAt = Date.now();
   try {
     await patchJob(jobId, {
@@ -213,10 +214,36 @@ async function runPipeline(jobId: string, query: string, language: string | null
     });
 
     const plan = await planQueries(query, language);
-    await patchJob(jobId, { plan, progress: 15, stage: `Planned ${plan.length} queries` });
     await appendStep(jobId, { type: "plan", queries: plan });
+    await patchJob(jobId, {
+      plan,
+      progress: 12,
+      stage: "Awaiting approval",
+      status: "awaiting_approval",
+    });
+  } catch (e) {
+    const finishedAt = Date.now();
+    await patchJob(jobId, {
+      status: "failed",
+      stage: "Failed",
+      error: (e as Error)?.message || String(e),
+      finished_at: new Date(finishedAt).toISOString(),
+      duration_ms: finishedAt - startedAt,
+    });
+  }
+}
 
-    await patchJob(jobId, { status: "searching", stage: "Searching the web" });
+// Phase 2: searching + extraction + synthesis. Runs after user approves the plan.
+async function runExecutionPhase(jobId: string, query: string, language: string | null, plan: string[]) {
+  const startedAt = Date.now();
+  try {
+    await patchJob(jobId, {
+      status: "searching",
+      progress: 18,
+      stage: "Searching the web",
+      plan,
+    });
+    await appendStep(jobId, { type: "approved", queries: plan });
 
     const allSources: Source[] = [];
     const allImages: string[] = [];
@@ -224,6 +251,7 @@ async function runPipeline(jobId: string, query: string, language: string | null
 
     for (let i = 0; i < plan.length; i++) {
       const q = plan[i];
+      await appendStep(jobId, { type: "searching", query: q, index: i + 1, total: plan.length });
       const { organic, images } = await serperSearch(q);
       for (const s of organic) {
         if (s.url && !seen.has(s.url)) {
@@ -236,13 +264,13 @@ async function runPipeline(jobId: string, query: string, language: string | null
       await patchJob(jobId, {
         sources: allSources,
         images: allImages,
-        progress: 15 + Math.round(((i + 1) / plan.length) * 35),
-        stage: `Searched ${i + 1}/${plan.length}: ${q.slice(0, 60)}`,
+        progress: 18 + Math.round(((i + 1) / plan.length) * 32),
+        stage: `Searched ${i + 1}/${plan.length}`,
       });
       await appendStep(jobId, { type: "search", query: q, results: organic.length });
     }
 
-    // Extract top N pages in parallel batches
+    // Extract top N pages in parallel batches with per-URL step tracking.
     const TOP = Math.min(8, allSources.length);
     await patchJob(jobId, { stage: `Extracting ${TOP} pages` });
     const excerpts: { url: string; text: string }[] = [];
@@ -250,8 +278,19 @@ async function runPipeline(jobId: string, query: string, language: string | null
     const batchSize = 3;
     for (let i = 0; i < top.length; i += batchSize) {
       const batch = top.slice(i, i + batchSize);
+      // Announce reads
+      for (const s of batch) {
+        const host = (() => { try { return new URL(s.url).hostname.replace(/^www\./, ""); } catch { return s.url; } })();
+        await appendStep(jobId, { type: "reading", url: s.url, host, title: s.title });
+      }
       const results = await Promise.all(
-        batch.map(async (s) => ({ url: s.url, text: await extractPage(s.url) })),
+        batch.map(async (s) => {
+          const t0 = Date.now();
+          const text = await extractPage(s.url);
+          const host = (() => { try { return new URL(s.url).hostname.replace(/^www\./, ""); } catch { return s.url; } })();
+          await appendStep(jobId, { type: "read", url: s.url, host, ms: Date.now() - t0, chars: text.length });
+          return { url: s.url, text };
+        }),
       );
       excerpts.push(...results);
       await patchJob(jobId, {
@@ -266,6 +305,7 @@ async function runPipeline(jobId: string, query: string, language: string | null
     });
 
     await patchJob(jobId, { status: "synthesizing", progress: 85, stage: "Synthesizing report" });
+    await appendStep(jobId, { type: "synthesizing" });
 
     const report = await synthesize(query, language, allSources, excerpts);
 
@@ -290,6 +330,7 @@ async function runPipeline(jobId: string, query: string, language: string | null
     });
   }
 }
+
 
 // ---- HTTP entry ----
 Deno.serve(async (req) => {
