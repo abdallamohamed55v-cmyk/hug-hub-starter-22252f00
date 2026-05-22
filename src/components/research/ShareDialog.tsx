@@ -81,6 +81,9 @@ export default function ShareDialog({ open, onOpenChange, url, title, isRtl }: P
                 <SheetTitle className="text-base sm:text-lg font-semibold tracking-tight leading-tight text-start">
                   {isRtl ? "مشاركة التقرير" : "Share report"}
                 </SheetTitle>
+                <SheetDescription className="sr-only">
+                  {isRtl ? "شارك التقرير عبر روابط ووسائل التواصل" : "Share this report via link or social channels"}
+                </SheetDescription>
               </SheetHeader>
           <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed text-start">
             {title}
