@@ -3449,9 +3449,7 @@ Ask me anything to get started!`;
                   "text-cyan-500",
                 ];
                 const color = ACCENT_COLORS[mobileGreetingColor % ACCENT_COLORS.length];
-                const phrase = isFirstVisit
-                  ? FIRST_GREETINGS[mobileGreeting % FIRST_GREETINGS.length]
-                  : RETURNING_GREETINGS[returningGreetingIdx % RETURNING_GREETINGS.length];
+                const phrase = RETURNING_GREETINGS[0];
                 return (
                   <motion.div
                     initial={{ opacity: 0, y: 6 }}
