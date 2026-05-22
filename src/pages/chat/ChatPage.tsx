@@ -4079,6 +4079,7 @@ Ask me anything to get started!`;
               templates={SLIDES_TEMPLATES.map((t) => ({
                 id: t.id,
                 name: t.name,
+                preview: t.cover,
                 description: t.description,
                 fallbackLabel: t.name,
                 category: t.category,
