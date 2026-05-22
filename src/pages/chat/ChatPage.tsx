@@ -1511,7 +1511,7 @@ const ChatPage = () => {
       ? true
       : shouldUseWebSearch(lastUserText, searchEnabled);
 
-    // Deep Research و Slides بيستخدموا GPT-5 لجودة أعلى، الباقي يستخدم Megsy
+    // Deep Research and Slides use GPT-5 for higher quality; the rest use Megsy
     const activeModel = (isDeepResearch || (chatMode as string) === "slides") ? "openai/gpt-5" : MEGSY_MODEL;
 
     // For background jobs (deep-research) we MUST have a conversationId before
