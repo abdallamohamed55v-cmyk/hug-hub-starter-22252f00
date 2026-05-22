@@ -3202,10 +3202,11 @@ Ask me anything to get started!`;
           transition={{ duration: 0.16, ease: [0.22, 0.9, 0.3, 1] }}
           data-plus-menu
           onClick={(e) => e.stopPropagation()}
-          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[286px] max-h-[320px] rounded-[18px] border border-border bg-background shadow-[0_22px_55px_-16px_rgba(0,0,0,0.55)] overflow-y-auto p-2 flex-col text-[12px] [&_.grid-cols-3]:!gap-1.5 [&_.grid-cols-3]:!mb-1.5 [&_.grid-cols-3>button]:!h-[58px] [&_.grid-cols-3>button]:!rounded-xl [&_.grid-cols-3>button]:!gap-1.5 [&_button[class*='py-3.5']]:!py-2 [&_button[class*='py-3.5']]:!px-2.5 [&_button[class*='py-3.5']]:!gap-2.5 [&_button[class*='py-3.5']]:!border-b [&_button[class*='py-3.5']]:!border-border/50 [&_button[class*='py-3.5']]:!rounded-none [&_.flex.flex-col>button[class*='py-3.5']:last-child]:!border-b-0 [&_.text-\\[15\\.5px\\]]:!text-[12.5px] [&_.text-\\[13px\\]]:!text-[11px] [&_.text-\\[12\\.5px\\]]:!text-[10.5px] [&_.text-\\[10px\\]]:!text-[9px] [&_.text-\\[9px\\]]:!text-[8px] [&_.w-\\[22px\\]]:!w-[15px] [&_.h-\\[22px\\]]:!h-[15px] [&_.w-7]:!w-6 [&_.h-7]:!h-6 [&_svg]:shrink-0`}
+          className={`hidden md:flex absolute left-2 ${hasConversation ? "bottom-full mb-2 origin-bottom-left" : "top-full mt-2 origin-top-left"} z-[60] w-[360px] max-h-[70vh] rounded-2xl border border-border bg-background shadow-[0_22px_55px_-16px_rgba(0,0,0,0.55)] overflow-y-auto p-2 flex-col`}
         >
           {content}
         </motion.div>
+
       </>
     );
   };
