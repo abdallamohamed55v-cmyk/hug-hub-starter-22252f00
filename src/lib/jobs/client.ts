@@ -26,7 +26,7 @@ export interface JobRow {
   updated_at?: string | null;
 }
 
-const STALE_JOB_MS = 90_000;
+const STALE_JOB_MS = 240_000; // 4 min — deep research can be silent between phases
 
 export function isJobStale(row: Pick<JobRow, "status" | "last_heartbeat_at" | "updated_at">, staleMs = STALE_JOB_MS): boolean {
   if (row.status !== "running" && row.status !== "queued") return false;
