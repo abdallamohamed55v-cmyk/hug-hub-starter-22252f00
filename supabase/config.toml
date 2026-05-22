@@ -1,1 +1,7 @@
 project_id = "ltgampdtawuefwwayncx"
+
+[functions.dodo-webhook]
+verify_jwt = false
+
+[functions.dodo-verify]
+verify_jwt = false
