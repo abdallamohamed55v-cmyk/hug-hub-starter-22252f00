@@ -53,7 +53,7 @@ export default function MobileComposer({
       style={{
         borderRadius: "1.5rem",
         border: "2.5px solid hsl(var(--foreground) / 0.5)",
-        boxShadow: "0 0 0 1px hsl(var(--background)), 0 10px 28px hsl(var(--foreground) / 0.14)",
+        boxShadow: "none",
       }}
     >
       <button
