@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 export type ResearchJobStatus =
   | "queued"
   | "planning"
+  | "awaiting_approval"
   | "searching"
   | "synthesizing"
   | "succeeded"
