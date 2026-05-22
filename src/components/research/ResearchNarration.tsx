@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { detectLang, langDir } from "@/lib/detectLang";
 
 interface Props {
