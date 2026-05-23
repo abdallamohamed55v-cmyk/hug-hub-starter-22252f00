@@ -73,9 +73,15 @@ Deno.serve(async (req) => {
     const dodoData = await dodoRes.json();
     if (!dodoRes.ok) {
       console.error("Dodo checkout error", dodoRes.status, dodoData);
-      return new Response(JSON.stringify({ error: dodoData?.message || "dodo_error", detail: dodoData }), {
-        status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      const rawMsg: string = dodoData?.message || "";
+      const isMissingProduct = /does not exist/i.test(rawMsg) || dodoData?.code === "INVALID_REQUEST_PARAMETERS";
+      const friendly = isMissingProduct
+        ? `هذه الخطة غير متاحة للدفع حاليًا (المنتج ${product_id} غير مهيأ في Dodo). تواصل مع الدعم.`
+        : (rawMsg || "تعذّر بدء جلسة الدفع. حاول مرة أخرى.");
+      return new Response(
+        JSON.stringify({ error: friendly, code: dodoData?.code, detail: dodoData }),
+        { status: isMissingProduct ? 503 : 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     const url = dodoData.checkout_url || dodoData.payment_link || dodoData.url;
