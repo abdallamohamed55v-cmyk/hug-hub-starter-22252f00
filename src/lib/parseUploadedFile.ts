@@ -1,17 +1,7 @@
 // Parse uploaded files (PDF, DOCX, plain text) into model-readable text.
-// Used by the chat upload handler so the model actually receives the content
-// instead of binary garbage.
-
-import * as pdfjs from "pdfjs-dist";
-// Vite-friendly worker import
-// @ts-ignore
-import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
-import mammoth from "mammoth";
-
-// Configure pdfjs worker once
-try {
-  (pdfjs as any).GlobalWorkerOptions.workerSrc = pdfWorker;
-} catch { /* ignore */ }
+// Heavy parsers (pdfjs-dist, mammoth) are dynamically imported so they
+// don't bloat the initial chat bundle — they only load when a user
+// actually uploads a PDF or DOCX.
 
 const MAX_CHARS = 30_000; // safety cap so we don't blow the model context
 
@@ -21,9 +11,24 @@ function clip(text: string): string {
   return cleaned.slice(0, MAX_CHARS) + `\n\n[... تم اقتطاع الملف عند ${MAX_CHARS} حرف ...]`;
 }
 
+let pdfjsPromise: Promise<any> | null = null;
+async function loadPdfjs() {
+  if (!pdfjsPromise) {
+    pdfjsPromise = (async () => {
+      const pdfjs: any = await import("pdfjs-dist");
+      // @ts-ignore — Vite-friendly worker URL import
+      const workerUrl = (await import("pdfjs-dist/build/pdf.worker.min.mjs?url")).default;
+      try { pdfjs.GlobalWorkerOptions.workerSrc = workerUrl; } catch { /* ignore */ }
+      return pdfjs;
+    })();
+  }
+  return pdfjsPromise;
+}
+
 async function parsePdf(file: File): Promise<string> {
+  const pdfjs = await loadPdfjs();
   const buf = await file.arrayBuffer();
-  const doc = await (pdfjs as any).getDocument({ data: buf }).promise;
+  const doc = await pdfjs.getDocument({ data: buf }).promise;
   const pages: string[] = [];
   const max = Math.min(doc.numPages, 50);
   for (let i = 1; i <= max; i++) {
@@ -36,6 +41,7 @@ async function parsePdf(file: File): Promise<string> {
 }
 
 async function parseDocx(file: File): Promise<string> {
+  const mammoth: any = await import("mammoth");
   const buf = await file.arrayBuffer();
   const { value } = await mammoth.extractRawText({ arrayBuffer: buf });
   return clip(value || "");
@@ -58,7 +64,6 @@ export async function parseUploadedFile(file: File): Promise<string> {
     ) {
       return await parseDocx(file);
     }
-    // Legacy .doc — mammoth doesn't support it; fall through to text() which will be ugly
     if (name.endsWith(".doc")) {
       return `[تعذّر قراءة ملف .doc القديم. الرجاء حفظه كـ .docx أو PDF.]`;
     }
